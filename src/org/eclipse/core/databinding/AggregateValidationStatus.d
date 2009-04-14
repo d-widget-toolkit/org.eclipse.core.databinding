@@ -12,6 +12,8 @@
  *     Matthew Hall - bug 218269
  *******************************************************************************/
 module org.eclipse.core.databinding.AggregateValidationStatus;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 
 import java.lang.all;
 

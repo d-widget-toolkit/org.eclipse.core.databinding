@@ -9,6 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.core.internal.databinding.observable.tree.IHasChildrenUpdate;
+import org.eclipse.core.internal.databinding.observable.tree.TreePath;
+import org.eclipse.core.internal.databinding.observable.tree.IViewerUpdate;
 
 import java.lang.all;
 

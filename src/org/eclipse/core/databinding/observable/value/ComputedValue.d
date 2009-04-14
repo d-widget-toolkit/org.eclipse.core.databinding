@@ -11,6 +11,9 @@
  *     Brad Reynolds - bug 147515
  *******************************************************************************/
 module org.eclipse.core.databinding.observable.value.ComputedValue;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 
 import java.lang.all;
 

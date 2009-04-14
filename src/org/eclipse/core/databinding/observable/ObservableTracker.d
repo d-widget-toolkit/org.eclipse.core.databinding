@@ -10,6 +10,10 @@
  *     Matthew Hall - Fix NPE, more detailed assert messages (bug 210115)
  *******************************************************************************/
 module org.eclipse.core.databinding.observable.ObservableTracker;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.IStaleListener;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.IObservable;
 
 import java.lang.all;
 

@@ -12,6 +12,10 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.map.AbstractObservableMap;
+import org.eclipse.core.databinding.observable.map.MapDiff;
+import org.eclipse.core.databinding.observable.map.MapChangeEvent;
+import org.eclipse.core.databinding.observable.map.IMapChangeListener;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
 
 import java.lang.all;
 

@@ -10,6 +10,7 @@
  *     db4objects - Initial API and implementation
  */
 module org.eclipse.core.internal.databinding.conversion.StringToBooleanConverter;
+import org.eclipse.core.internal.databinding.conversion.StringToBooleanPrimitiveConverter;
 
 import java.lang.all;
 

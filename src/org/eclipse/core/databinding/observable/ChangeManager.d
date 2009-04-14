@@ -11,6 +11,9 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.ChangeManager;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.IObservablesListener;
+import org.eclipse.core.databinding.observable.ObservableEvent;
 
 import java.lang.all;
 

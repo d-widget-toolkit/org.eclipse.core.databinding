@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.conversion.NumberToStringConverter;
+import org.eclipse.core.databinding.conversion.Converter;
 
 import java.lang.all;
 

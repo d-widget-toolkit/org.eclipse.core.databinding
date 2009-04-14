@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.conversion.StringToShortConverter;
+import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
 

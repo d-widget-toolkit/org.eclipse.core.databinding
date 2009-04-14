@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.UpdateStrategy;
+import org.eclipse.core.databinding.BindingException;
 
 import java.lang.all;
 

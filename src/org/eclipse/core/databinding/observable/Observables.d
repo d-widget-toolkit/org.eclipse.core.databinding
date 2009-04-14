@@ -13,6 +13,10 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.observable.Observables;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.IStaleListener;
+import org.eclipse.core.databinding.observable.IObservable;
 
 import java.lang.all;
 

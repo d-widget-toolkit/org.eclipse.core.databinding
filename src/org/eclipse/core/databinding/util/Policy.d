@@ -13,6 +13,7 @@
  *     Tom Schindl <tom.schindl@bestsolution.at> - bug 194587
  *******************************************************************************/
 module org.eclipse.core.databinding.util.Policy;
+import org.eclipse.core.databinding.util.ILogger;
 
 import java.lang.all;
 

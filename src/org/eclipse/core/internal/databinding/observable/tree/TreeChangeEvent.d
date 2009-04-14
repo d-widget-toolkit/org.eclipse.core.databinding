@@ -10,6 +10,8 @@
  *******************************************************************************/
 
 module org.eclipse.core.internal.databinding.observable.tree.TreeChangeEvent;
+import org.eclipse.core.internal.databinding.observable.tree.IObservableTree;
+import org.eclipse.core.internal.databinding.observable.tree.TreeDiff;
 
 import java.lang.all;
 

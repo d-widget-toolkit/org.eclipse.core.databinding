@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.map.IMapChangeListener;
+import org.eclipse.core.databinding.observable.map.MapChangeEvent;
 
 import java.lang.all;
 

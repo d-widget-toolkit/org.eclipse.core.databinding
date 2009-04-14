@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.internal.databinding.observable.tree.IOrderedTreeProvider;
+import org.eclipse.core.internal.databinding.observable.tree.TreePath;
 
 import java.lang.all;
 

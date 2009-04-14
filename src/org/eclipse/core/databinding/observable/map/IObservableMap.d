@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.map.IMapChangeListener;
 
 import java.lang.all;
 

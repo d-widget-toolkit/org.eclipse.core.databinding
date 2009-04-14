@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 
 import java.lang.all;
 

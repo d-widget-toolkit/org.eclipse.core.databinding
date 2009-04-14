@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 
 import java.lang.all;
 

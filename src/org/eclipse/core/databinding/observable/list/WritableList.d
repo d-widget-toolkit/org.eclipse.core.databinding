@@ -14,6 +14,8 @@
  *     Matthew Hall - bug 208858, 213145
  *******************************************************************************/
 module org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.list.ObservableList;
+import org.eclipse.core.databinding.observable.list.ListDiffEntry;
 
 import java.lang.all;
 

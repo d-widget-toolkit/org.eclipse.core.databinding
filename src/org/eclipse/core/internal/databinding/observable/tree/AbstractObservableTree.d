@@ -11,6 +11,14 @@
  *******************************************************************************/
 
 module org.eclipse.core.internal.databinding.observable.tree.AbstractObservableTree;
+import org.eclipse.core.internal.databinding.observable.tree.ITreeChangeListener;
+import org.eclipse.core.internal.databinding.observable.tree.TreeChangeEvent;
+import org.eclipse.core.internal.databinding.observable.tree.IObservableTree;
+import org.eclipse.core.internal.databinding.observable.tree.TreePath;
+import org.eclipse.core.internal.databinding.observable.tree.IChildrenCountUpdate;
+import org.eclipse.core.internal.databinding.observable.tree.IHasChildrenUpdate;
+import org.eclipse.core.internal.databinding.observable.tree.TreeDiff;
+import org.eclipse.core.internal.databinding.observable.tree.IChildrenUpdate;
 
 import java.lang.all;
 

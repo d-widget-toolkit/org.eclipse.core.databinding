@@ -10,6 +10,9 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.ListBinding;
+import org.eclipse.core.databinding.UpdateListStrategy;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.Binding;
 
 import java.lang.all;
 

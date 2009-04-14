@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.set.ISetChangeListener;
 
 import java.lang.all;
 

@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.observable.StalenessTracker;
+import org.eclipse.core.internal.databinding.observable.IStalenessConsumer;
 
 import java.lang.all;
 

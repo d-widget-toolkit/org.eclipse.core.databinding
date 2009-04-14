@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.validation.AbstractStringToNumberValidator;
+import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
 import java.lang.all;
 

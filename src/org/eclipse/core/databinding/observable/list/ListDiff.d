@@ -11,6 +11,8 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.list.ListDiff;
+import org.eclipse.core.databinding.observable.list.ListDiffEntry;
+import org.eclipse.core.databinding.observable.list.ListDiffVisitor;
 
 import java.lang.all;
 

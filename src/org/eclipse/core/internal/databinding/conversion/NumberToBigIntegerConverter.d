@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.conversion.NumberToBigIntegerConverter;
+import org.eclipse.core.internal.databinding.conversion.NumberToNumberConverter;
 
 import java.lang.all;
 

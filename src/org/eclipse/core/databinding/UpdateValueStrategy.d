@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.UpdateStrategy;
 
 import java.lang.all;
 

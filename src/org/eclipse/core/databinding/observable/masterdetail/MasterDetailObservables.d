@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.masterdetail.MasterDetailObservables;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 
 import java.lang.all;
 

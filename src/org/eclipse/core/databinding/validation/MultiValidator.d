@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 
 import java.lang.all;
 

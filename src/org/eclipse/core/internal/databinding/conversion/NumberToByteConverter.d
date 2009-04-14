@@ -10,6 +10,8 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.conversion.NumberToByteConverter;
+import org.eclipse.core.internal.databinding.conversion.NumberToNumberConverter;
+import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
 

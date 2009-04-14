@@ -10,6 +10,14 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.ChangeSupport;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.IStaleListener;
+import org.eclipse.core.databinding.observable.IObservablesListener;
+import org.eclipse.core.databinding.observable.ObservableEvent;
+import org.eclipse.core.databinding.observable.StaleEvent;
+import org.eclipse.core.databinding.observable.ChangeManager;
 
 import java.lang.all;
 

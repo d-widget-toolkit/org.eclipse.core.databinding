@@ -10,6 +10,8 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.IStaleListener;
+import org.eclipse.core.databinding.observable.IObservablesListener;
+import org.eclipse.core.databinding.observable.StaleEvent;
 
 import java.lang.all;
 

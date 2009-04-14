@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.map.ComputedObservableMap;
+import org.eclipse.core.databinding.observable.map.AbstractObservableMap;
 
 import java.lang.all;
 

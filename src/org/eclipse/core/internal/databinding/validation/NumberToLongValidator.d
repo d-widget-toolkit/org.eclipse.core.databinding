@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.validation.NumberToLongValidator;
+import org.eclipse.core.internal.databinding.validation.NumberToNumberValidator;
 
 import java.lang.all;
 

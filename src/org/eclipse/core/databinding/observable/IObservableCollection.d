@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.IObservableCollection;
+import org.eclipse.core.databinding.observable.IObservable;
 
 import java.lang.all;
 

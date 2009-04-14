@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
 
 import java.lang.all;
 

@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.core.databinding.observable.value.IValueChangingListener;
+import org.eclipse.core.databinding.observable.value.ValueChangingEvent;
 
 import java.lang.all;
 

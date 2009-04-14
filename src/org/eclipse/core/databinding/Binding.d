@@ -13,6 +13,8 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 
 import java.lang.all;
 

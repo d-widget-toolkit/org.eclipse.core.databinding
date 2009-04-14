@@ -11,6 +11,8 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.SetBinding;
+import org.eclipse.core.databinding.UpdateSetStrategy;
+import org.eclipse.core.databinding.Binding;
 
 import java.lang.all;
 

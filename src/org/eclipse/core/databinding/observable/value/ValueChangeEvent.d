@@ -10,6 +10,9 @@
  ******************************************************************************/
 
 module org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 import java.lang.all;
 

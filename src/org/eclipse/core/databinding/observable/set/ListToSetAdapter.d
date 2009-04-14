@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.set.ListToSetAdapter;
+import org.eclipse.core.databinding.observable.set.ObservableSet;
 
 import java.lang.all;
 

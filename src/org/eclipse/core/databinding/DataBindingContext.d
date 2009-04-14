@@ -15,6 +15,14 @@
  *     Boris Bokowski - bug 218269
  *******************************************************************************/
 module org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ListBinding;
+import org.eclipse.core.databinding.ValueBinding;
+import org.eclipse.core.databinding.UpdateListStrategy;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.UpdateSetStrategy;
+import org.eclipse.core.databinding.SetBinding;
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 
 import java.lang.all;
 

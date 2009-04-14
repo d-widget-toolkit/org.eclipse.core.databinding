@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 module org.eclipse.core.internal.databinding.observable.tree.TreeDiff;
+import org.eclipse.core.internal.databinding.observable.tree.TreeDiffVisitor;
+import org.eclipse.core.internal.databinding.observable.tree.TreePath;
+import org.eclipse.core.internal.databinding.observable.tree.TreeDiffNode;
 
 import java.lang.all;
 

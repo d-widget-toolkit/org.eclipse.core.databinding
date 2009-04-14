@@ -15,6 +15,10 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.list.AbstractObservableList;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
+import org.eclipse.core.databinding.observable.list.ListDiff;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 
 import java.lang.all;
 

@@ -10,6 +10,8 @@
  ******************************************************************************/
 
 module org.eclipse.core.internal.databinding.validation.StringToIntegerValidator;
+import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
+import org.eclipse.core.internal.databinding.validation.AbstractStringToNumberValidator;
 
 import java.lang.all;
 

@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.observable.map.WritableMap;
+import org.eclipse.core.databinding.observable.map.ObservableMap;
 
 import java.lang.all;
 

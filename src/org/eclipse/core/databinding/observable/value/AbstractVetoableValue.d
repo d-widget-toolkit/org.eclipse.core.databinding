@@ -10,6 +10,12 @@
  *     Brad Reynolds - bug 164653
  *******************************************************************************/
 module org.eclipse.core.databinding.observable.value.AbstractVetoableValue;
+import org.eclipse.core.databinding.observable.value.IVetoableValue;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangingListener;
+import org.eclipse.core.databinding.observable.value.ChangeVetoException;
+import org.eclipse.core.databinding.observable.value.ValueChangingEvent;
 
 import java.lang.all;
 

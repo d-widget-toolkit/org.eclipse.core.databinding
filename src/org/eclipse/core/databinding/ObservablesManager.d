@@ -11,6 +11,8 @@
  *******************************************************************************/
 
 module org.eclipse.core.databinding.ObservablesManager;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.Binding;
 
 import java.lang.all;
 

@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.core.internal.databinding.observable.tree.IViewerUpdate;
+import org.eclipse.core.internal.databinding.observable.tree.TreePath;
 
 import java.lang.all;
 

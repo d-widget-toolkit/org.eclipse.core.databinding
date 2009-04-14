@@ -10,6 +10,7 @@
  *     db4objects - Initial API and implementation
  */
 module org.eclipse.core.internal.databinding.conversion.DateToStringConverter;
+import org.eclipse.core.internal.databinding.conversion.DateConversionSupport;
 
 import java.lang.all;
 

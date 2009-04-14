@@ -10,6 +10,10 @@
  *      Matthew Hall - bug 211786
  ***********************************************************************************************************/
 module org.eclipse.core.databinding.observable.list.ComputedList;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
+import org.eclipse.core.databinding.observable.list.AbstractObservableList;
+import org.eclipse.core.databinding.observable.list.ListDiffEntry;
+import org.eclipse.core.databinding.observable.list.ListDiff;
 
 import java.lang.all;
 

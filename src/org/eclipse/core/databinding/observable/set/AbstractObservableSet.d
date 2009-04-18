@@ -41,6 +41,26 @@ import org.eclipse.core.databinding.observable.Realm;
  */
 public abstract class AbstractObservableSet : AbstractObservable ,
         IObservableSet {
+// DWT start: additional methods in Set
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+// DWT end: additional methods in Set
 
     private ChangeSupport changeSupport;
 
@@ -61,6 +81,7 @@ public abstract class AbstractObservableSet : AbstractObservable ,
     protected this(Realm realm) {
         super(realm);
         changeSupport = new class(realm) ChangeSupport {
+            this(Realm r){ super(r); }
             protected void firstListenerAdded() {
                 this.outer.firstListenerAdded();
             }
@@ -97,14 +118,14 @@ public abstract class AbstractObservableSet : AbstractObservable ,
         return getWrappedSet().containsAll(c);
     }
 
-    public override bool opEquals(Object o) {
+    public override equals_t opEquals(Object o) {
         getterCalled();
-        return getWrappedSet().equals(o);
+        return getWrappedSet().opEquals(o);
     }
 
-    public int hashCode() {
+    public override hash_t toHash() {
         getterCalled();
-        return getWrappedSet().hashCode();
+        return getWrappedSet().toHash();
     }
 
     public bool isEmpty() {

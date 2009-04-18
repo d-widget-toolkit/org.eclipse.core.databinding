@@ -29,6 +29,9 @@ import org.eclipse.core.runtime.AssertionFailedException;
  * @since 1.0
  */
 public abstract class AbstractObservable : ChangeManager , IObservable {
+    public override Realm getRealm(){
+        return super.getRealm();
+    }
     
     /**
      * @param realm

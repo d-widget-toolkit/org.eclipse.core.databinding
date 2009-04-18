@@ -13,11 +13,11 @@ module org.eclipse.core.internal.databinding.validation.AbstractStringToNumberVa
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
-import org.eclipse.core.internal.databinding.conversion.StringToNumberParser.ParseResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -49,9 +49,9 @@ public abstract class AbstractStringToNumberValidator : IValidator {
         this.min = min;
         this.max = max;
 
-        if (null !is cast(ClassInfo)converter.getToType()) {
-            ClassInfo clazz = cast(ClassInfo) converter.getToType();
-            toPrimitive = clazz.isPrimitive();
+        if (null !is cast(TypeInfo)converter.getToType()) {
+            TypeInfo clazz = cast(TypeInfo) converter.getToType();
+            toPrimitive = isJavaPrimitive(clazz);
         } else {
             toPrimitive = false;
         }
@@ -67,7 +67,7 @@ public abstract class AbstractStringToNumberValidator : IValidator {
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     public final IStatus validate(Object value) {
-        ParseResult result = StringToNumberParser.parse(value, converter
+        StringToNumberParser.ParseResult result = StringToNumberParser.parse(value, converter
                 .getNumberFormat(), toPrimitive);
 
         if (result.getNumber() !is null) {
@@ -82,7 +82,7 @@ public abstract class AbstractStringToNumberValidator : IValidator {
             }
         } else if (result.getPosition() !is null) {
             String parseErrorMessage = StringToNumberParser.createParseErrorMessage(
-                    cast(String) value, result.getPosition());
+                    stringcast(value), result.getPosition());
 
             return ValidationStatus.error(parseErrorMessage);
         }

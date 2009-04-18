@@ -30,8 +30,11 @@ public class ChangeEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = -3241193109844979384L;
-    static final Object TYPE = new Object();
+    private static const long serialVersionUID = -3241193109844979384L;
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     /**
      * Creates a new change event object.

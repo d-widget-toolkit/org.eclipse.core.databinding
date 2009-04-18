@@ -12,6 +12,7 @@
 module org.eclipse.core.databinding.observable.value.ValueDiff;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.observable.Diffs;
 
@@ -36,7 +37,7 @@ public abstract class ValueDiff {
      */
     public abstract Object getNewValue();
 
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if ( null !is cast(ValueDiff)obj ) {
             ValueDiff val = cast(ValueDiff) obj;
 
@@ -47,13 +48,13 @@ public abstract class ValueDiff {
         return false;
     }
         
-    public int hashCode() {
+    public hash_t toHash() {
         final int prime = 31;
         int result = 1;
         Object nv = getNewValue();
         Object ov = getOldValue();
-        result = prime * result + ((nv is null) ? 0 : nv.hashCode());
-        result = prime * result + ((ov is null) ? 0 : ov.hashCode());
+        result = prime * result + ((nv is null) ? 0 : nv.toHash());
+        result = prime * result + ((ov is null) ? 0 : ov.toHash());
         return result;
     }
 
@@ -63,7 +64,7 @@ public abstract class ValueDiff {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer
-            .append(getClass().getName())
+            .append(.getName(this.classinfo))
             .append("{oldValue [") //$NON-NLS-1$
             .append(getOldValue() !is null ? getOldValue().toString() : "null") //$NON-NLS-1$
             .append("], newValue [") //$NON-NLS-1$

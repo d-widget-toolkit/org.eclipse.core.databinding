@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.IStaleListener;
 import org.eclipse.core.databinding.observable.AbstractObservable;
 import org.eclipse.core.databinding.observable.ObservableTracker;
 import org.eclipse.core.databinding.observable.Realm;
@@ -36,6 +38,71 @@ import org.eclipse.core.databinding.observable.Realm;
  * @since 1.0
  */
 public class ObservableMap : AbstractObservable , IObservableMap {
+    // DWT start: java.util.Map additional methods
+    public bool containsKey(String key) {
+        return containsKey(stringcast(key));
+    }
+    public Object get(String key){
+        return get(stringcast(key));
+    }
+    public Object put(String key, Object value){
+        return put(stringcast(key), value);
+    }
+    public Object put(Object key, String value){
+        return put(key, stringcast(value));
+    }
+    public Object put(String key, String value){
+        return put(stringcast(key), stringcast(value));
+    }
+    public Object remove(String key){
+        return remove(stringcast(key));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        foreach( entry; entrySet() ){
+            auto me = cast(Map.Entry)entry;
+            auto v = me.getValue();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    public int opApply (int delegate(ref Object key, ref Object value) dg){
+        foreach( entry; entrySet() ){
+            auto me = cast(Map.Entry)entry;
+            auto k = me.getKey();
+            auto v = me.getValue();
+            int res = dg( k, v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    // DWT end: java.util.Map additional methods
+    // DWT start reimpl super meths
+    public override Realm getRealm() {
+        return super.getRealm();
+    }
+    public override void addChangeListener(IChangeListener listener) {
+        super.addChangeListener(listener);
+    }
+    public override void addStaleListener(IStaleListener listener) {
+        super.addStaleListener(listener);
+    }
+    public override void removeChangeListener(IChangeListener listener) {
+        super.removeChangeListener(listener);
+    }
+    public override void removeStaleListener(IStaleListener listener) {
+        super.removeStaleListener(listener);
+    }
+    public override hash_t toHash(){
+        return super.toHash();
+    }
+    public equals_t opEquals( Object o){
+        if( ObservableMap other = cast(ObservableMap)o){
+            return cast(equals_t)entrySet().opEquals( cast(Object) other.entrySet() );
+        }
+        return false;
+    }
+    // DWT end reimpl super meths
 
     protected Map wrappedMap;
 

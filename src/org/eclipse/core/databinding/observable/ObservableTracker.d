@@ -70,11 +70,17 @@ public class ObservableTracker {
      * changes the current value, it remembers the old value as a local variable
      * and restores the old value when the method exits.
      */
-    private static ThreadLocal currentChangeListener = new ThreadLocal();
+    private static ThreadLocal currentChangeListener;
 
-    private static ThreadLocal currentStaleListener = new ThreadLocal();
+    private static ThreadLocal currentStaleListener;
 
-    private static ThreadLocal currentObservableSet = new ThreadLocal();
+    private static ThreadLocal currentObservableSet;
+
+    static this(){
+currentChangeListener = new ThreadLocal();
+currentStaleListener = new ThreadLocal();
+currentObservableSet = new ThreadLocal();
+    }
 
     /**
      * Invokes the given runnable, and returns the set of IObservables that were
@@ -102,17 +108,17 @@ public class ObservableTracker {
 
         Set observableSet = new HashSet();
         // Push the new listeners to the top of the stack
-        currentObservableSet.set(observableSet);
-        currentChangeListener.set(changeListener);
-        currentStaleListener.set(staleListener);
+        currentObservableSet.set(cast(Object)observableSet);
+        currentChangeListener.set(cast(Object)changeListener);
+        currentStaleListener.set(cast(Object)staleListener);
         try {
             runnable.run();
         } finally {
             // Pop the new listener off the top of the stack (by restoring the
             // previous listener)
-            currentObservableSet.set(lastObservableSet);
-            currentChangeListener.set(lastChangeListener);
-            currentStaleListener.set(lastStaleListener);
+            currentObservableSet.set(cast(Object)lastObservableSet);
+            currentChangeListener.set(cast(Object)lastChangeListener);
+            currentStaleListener.set(cast(Object)lastStaleListener);
         }
 
         int i = 0;
@@ -146,9 +152,9 @@ public class ObservableTracker {
         } finally {
             // Pop the new listener off the top of the stack (by restoring the
             // previous listener)
-            currentObservableSet.set(lastObservableSet);
-            currentChangeListener.set(lastChangeListener);
-            currentStaleListener.set(lastStaleListener);
+            currentObservableSet.set(cast(Object)lastObservableSet);
+            currentChangeListener.set(cast(Object)lastChangeListener);
+            currentStaleListener.set(cast(Object)lastStaleListener);
         }
     }
 
@@ -158,8 +164,8 @@ public class ObservableTracker {
      * recursion and stack overflow.
      */
     private static String toString(IObservable observable) {
-        return observable.getClass().getName() + "@" //$NON-NLS-1$
-                + Integer.toHexString(System.identityHashCode(observable));
+        return observable.classinfo.name ~ "@" //$NON-NLS-1$
+                ~ Integer.toHexString(System.identityHashCode(cast(Object)observable));
     }
 
     /**
@@ -176,10 +182,10 @@ public class ObservableTracker {
         Realm realm = observable.getRealm();
         if (realm is null) // observable.isDisposed() would be more appropriate if it existed
             Assert.isTrue(false, "Getter called on disposed observable " //$NON-NLS-1$
-                    + toString(observable));
+                    ~ toString(observable));
         if (!realm.isCurrent())
             Assert.isTrue(false, "Getter called outside realm of observable " //$NON-NLS-1$
-                    + toString(observable));
+                    ~ toString(observable));
 
         Set lastObservableSet = cast(Set) currentObservableSet.get();
         if (lastObservableSet is null) {
@@ -192,7 +198,7 @@ public class ObservableTracker {
 
         bool added = false;
         if (lastObservableSet !is null) {
-            added = lastObservableSet.add(new IdentityWrapper(observable));
+            added = lastObservableSet.add(new IdentityWrapper(cast(Object)observable));
         }
 
         // If anyone is listening for observable usage...

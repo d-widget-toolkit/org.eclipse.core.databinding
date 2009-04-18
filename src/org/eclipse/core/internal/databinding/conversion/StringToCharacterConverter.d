@@ -37,11 +37,11 @@ public class StringToCharacterConverter : IConverter {
      * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object source) {
-        if (source !is null && !( null !is cast(String)source ))
+        if (source !is null && !( null !is cast(ArrayWrapperString)source ))
             throw new IllegalArgumentException(
-                    "String2Character: Expected type String, got type [" + source.getClass().getName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("String2Character: Expected type String, got type [{}]", source.classinfo.name) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-        String s = cast(String) source;
+        String s = stringcast(source);
         if (source is null || s.equals("")) { //$NON-NLS-1$
             if (primitiveTarget)
                 throw new IllegalArgumentException(
@@ -52,24 +52,24 @@ public class StringToCharacterConverter : IConverter {
 
         if (s.length() > 1)
             throw new IllegalArgumentException(
-                    "String2Character: string too long: " + s); //$NON-NLS-1$
+                    "String2Character: string too long: " ~ s); //$NON-NLS-1$
 
         try {
             result = new Character(s.charAt(0));
         } catch (Exception e) {
             throw new IllegalArgumentException(
-                    "String2Character: " + e.getMessage() + ": " + s); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("String2Character: {}: {}", e.msg, s)); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return result;
     }
 
     public Object getFromType() {
-        return String.classinfo;
+        return typeid(StringCls);
     }
 
     public Object getToType() {
-        return primitiveTarget ? Character.TYPE : Character.classinfo;
+        return primitiveTarget ? Character.TYPE : typeid(Character);
     }
 
     /**

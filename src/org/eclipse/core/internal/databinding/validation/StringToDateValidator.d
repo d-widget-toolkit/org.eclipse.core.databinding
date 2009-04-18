@@ -43,7 +43,7 @@ public class StringToDateValidator : IValidator {
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     public IStatus validate(Object value) {
-        if ( null !is cast(String )value && (cast(String)value).trim().length() is 0) {
+        if ( null !is cast(ArrayWrapperString)value && (stringcast(value)).trim().length() is 0) {
             return Status.OK_STATUS;
         }
         Object convertedValue = converter.convert(value);
@@ -75,7 +75,7 @@ public class StringToDateValidator : IValidator {
         samples.append('\'');
         samples.append(util.format(sampleDate, 0));
         samples.append('\'');
-        return BindingMessages.getStringcast(BindingMessages.EXAMPLES) + ": " + samples + ",..."; //$NON-NLS-1$//$NON-NLS-2$
+        return BindingMessages.getString(BindingMessages.EXAMPLES) ~ ": " ~ samples.toString() ~ ",..."; //$NON-NLS-1$//$NON-NLS-2$
     }
 
     private static class FormatUtil : DateConversionSupport {

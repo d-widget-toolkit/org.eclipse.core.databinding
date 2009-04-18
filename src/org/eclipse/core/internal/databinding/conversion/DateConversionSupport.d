@@ -32,25 +32,28 @@ import com.ibm.icu.text.SimpleDateFormat;
  * </p>
  */
 public abstract class DateConversionSupport {
-    private final static int DATE_FORMAT=DateFormat.SHORT;
-    private final static int DEFAULT_FORMATTER_INDEX=0;
+    private const static int DATE_FORMAT=DateFormat.SHORT;
+    private const static int DEFAULT_FORMATTER_INDEX=0;
 
-    private final static int NUM_VIRTUAL_FORMATTERS=1;
+    private const static int NUM_VIRTUAL_FORMATTERS=1;
 
     /**
      * Alternative formatters for date, time and date/time.
      * Raw milliseconds are covered as a special case.
      */
     // TODO: These could be shared, but would have to be synchronized.
-    private DateFormat[] formatters = {
-            new SimpleDateFormat(BindingMessages.getStringcast(BindingMessages.DATE_FORMAT_DATE_TIME)),
-            new SimpleDateFormat(BindingMessages.getStringcast(BindingMessages.DATEFORMAT_TIME)),
+    private static DateFormat[] formatters;
+    static this(){
+        formatters = [ cast(DateFormat)
+            new SimpleDateFormat(BindingMessages.getString(BindingMessages.DATE_FORMAT_DATE_TIME)),
+            new SimpleDateFormat(BindingMessages.getString(BindingMessages.DATEFORMAT_TIME)),
             DateFormat.getDateTimeInstance(DATE_FORMAT, DateFormat.SHORT),
-            DateFormat.getDateInstancecast(DATE_FORMAT),
-            DateFormat.getTimeInstancecast(DateFormat.SHORT),
+            DateFormat.getDateInstance(DATE_FORMAT),
+            DateFormat.getTimeInstance(DateFormat.SHORT),
             DateFormat.getDateTimeInstance(DATE_FORMAT,DateFormat.MEDIUM),
-            DateFormat.getTimeInstancecast(DateFormat.MEDIUM)
-    };
+            DateFormat.getTimeInstance(DateFormat.MEDIUM)
+        ];
+    }
 
     /**
      * Tries all available formatters to parse the given string according to the
@@ -104,7 +107,7 @@ public abstract class DateConversionSupport {
         if(formatterIdx>=0) {
             return formatters[formatterIdx].format(date);
         }
-        return String.valueOf(date.getTime());
+        return String_valueOf(date.getTime());
     }
 
     protected int numFormatters() {
@@ -123,7 +126,7 @@ public abstract class DateConversionSupport {
      */
     protected DateFormat getDateFormat(int index) {
         if (index < 0 || index >= formatters.length) {
-            throw new IllegalArgumentException("'index' [" + index + "] is out of bounds.");  //$NON-NLS-1$//$NON-NLS-2$
+            throw new IllegalArgumentException(Format("'index' [{}] is out of bounds.", index ));  //$NON-NLS-1$//$NON-NLS-2$
         }
 
         return formatters[index];

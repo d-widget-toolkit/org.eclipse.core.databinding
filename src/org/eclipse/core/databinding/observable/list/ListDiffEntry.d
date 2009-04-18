@@ -41,7 +41,7 @@ public abstract class ListDiffEntry {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer
-            .append(this.getClass().getName())
+            .append(this.classinfo.name)
             .append("{position [") //$NON-NLS-1$
             .append(getPosition())
             .append("], isAddition [") //$NON-NLS-1$

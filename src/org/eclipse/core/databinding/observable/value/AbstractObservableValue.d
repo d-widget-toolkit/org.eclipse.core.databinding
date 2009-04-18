@@ -56,7 +56,8 @@ abstract public class AbstractObservableValue : AbstractObservable , IObservable
         removeListener(ValueChangeEvent.TYPE, listener);
     }
 
-    final public void setValue(Object value) {
+    // DWT remove final for reimpl delegation
+    /+final+/ public void setValue(Object value) {
         checkRealm();
         doSetValue(value);
     }
@@ -77,7 +78,8 @@ abstract public class AbstractObservableValue : AbstractObservable , IObservable
         fireEvent(new ValueChangeEvent(this, diff));
     }
 
-    public final Object getValue() {
+    // DWT remove final for reimpl delegation
+    public /+final+/ Object getValue() {
         getterCalled();
         return doGetValue();
     }

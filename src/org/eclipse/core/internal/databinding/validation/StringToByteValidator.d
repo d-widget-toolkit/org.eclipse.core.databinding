@@ -21,13 +21,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class StringToByteValidator : AbstractStringToNumberValidator {
-    private static final Byte MIN = new Bytecast(Byte.MIN_VALUE);
-    private static final Byte MAX = new Bytecast(Byte.MAX_VALUE);
+    private static Byte MIN;
+    private static Byte MAX;
     
     /**
      * @param converter
      */
     public this(NumberFormatConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Byte(Byte.MIN_VALUE);
+            MAX = new Byte(Byte.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

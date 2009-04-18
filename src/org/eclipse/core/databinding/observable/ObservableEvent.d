@@ -33,7 +33,7 @@ public abstract class ObservableEvent : EventObject {
      * @param source
      */
     public this(IObservable source) {
-        super(source);
+        super(cast(Object)source);
     }
 
     /**
@@ -59,6 +59,9 @@ public abstract class ObservableEvent : EventObject {
      *            the listener that should handle the event
      */
     protected abstract void dispatch(IObservablesListener listener);
+    package void dispatch_package(IObservablesListener listener){
+        dispatch(listener);
+    }
 
     /**
      * Returns a unique object used for distinguishing this event type from
@@ -67,5 +70,8 @@ public abstract class ObservableEvent : EventObject {
      * @return a unique object representing the concrete type of this event.
      */
     protected abstract Object getListenerType();
+    package Object getListenerType_package(){
+        return getListenerType();
+    }
 
 }

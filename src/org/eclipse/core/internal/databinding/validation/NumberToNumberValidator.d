@@ -12,6 +12,7 @@
 module org.eclipse.core.internal.databinding.validation.NumberToNumberValidator;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -52,7 +53,7 @@ public abstract class NumberToNumberValidator : IValidator {
         this.min = min;
         this.max = max;
 
-        primitive = (cast(ClassInfo) converter.getToType()).isPrimitive();
+        primitive = isJavaPrimitive(cast(TypeInfo)converter.getToType());
     }
 
     /*

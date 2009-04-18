@@ -31,8 +31,11 @@ public class SetChangeEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = 7436547103857482256L;
-    static final Object TYPE = new Object();
+    private static const long serialVersionUID = 7436547103857482256L;
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     /**
      * Description of the change to the source observable set. Listeners must

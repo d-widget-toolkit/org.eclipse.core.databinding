@@ -101,10 +101,10 @@ public interface IObservableMap : Map, IObservable {
     /**
      * @TrackedGetter
      */
-    public bool opEquals(Object o);
+    public equals_t opEquals(Object o);
 
     /**
      * @TrackedGetter
      */
-    public int hashCode();
+    public hash_t toHash();
 }

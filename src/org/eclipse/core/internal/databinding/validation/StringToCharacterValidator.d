@@ -47,7 +47,7 @@ public class StringToCharacterValidator : IValidator {
             // The StringToCharacterConverter throws an IllegalArgumentException
             // if it cannot convert.
             return ValidationStatus.error(BindingMessages
-                    .getStringcast(BindingMessages.VALIDATE_CHARACTER_HELP));
+                    .getString(BindingMessages.VALIDATE_CHARACTER_HELP));
         }
         return Status.OK_STATUS;
     }

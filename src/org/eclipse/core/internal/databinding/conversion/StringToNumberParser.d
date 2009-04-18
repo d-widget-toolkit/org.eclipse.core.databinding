@@ -27,15 +27,21 @@ import com.ibm.icu.text.NumberFormat;
  * @since 1.0
  */
 public class StringToNumberParser {
-    private static final BigDecimal FLOAT_MAX_BIG_DECIMAL = new BigDecimal(
-            Float.MAX_VALUE);
-    private static final BigDecimal FLOAT_MIN_BIG_DECIMAL = new BigDecimal(
-            -Float.MAX_VALUE);
+    private static BigDecimal FLOAT_MAX_BIG_DECIMAL;
+    private static BigDecimal FLOAT_MIN_BIG_DECIMAL;
+    private static BigDecimal DOUBLE_MAX_BIG_DECIMAL;
+    private static BigDecimal DOUBLE_MIN_BIG_DECIMAL;
+    static this(){
+        FLOAT_MAX_BIG_DECIMAL = new BigDecimal(
+                Float.MAX_VALUE);
+        FLOAT_MIN_BIG_DECIMAL = new BigDecimal(
+                -Float.MAX_VALUE);
 
-    private static final BigDecimal DOUBLE_MAX_BIG_DECIMAL = new BigDecimal(
-            Double.MAX_VALUE);
-    private static final BigDecimal DOUBLE_MIN_BIG_DECIMAL = new BigDecimal(
-            -Double.MAX_VALUE);
+        DOUBLE_MAX_BIG_DECIMAL = new BigDecimal(
+                Double.MAX_VALUE);
+        DOUBLE_MIN_BIG_DECIMAL = new BigDecimal(
+                -Double.MAX_VALUE);
+    }
 
     /**
      * @param value
@@ -45,12 +51,12 @@ public class StringToNumberParser {
      */
     public static ParseResult parse(Object value, NumberFormat numberFormat,
             bool primitive) {
-        if (!( null !is cast(String)value )) {
+        if (!( null !is cast(ArrayWrapperString)value )) {
             throw new IllegalArgumentException(
                     "Value to convert is not a String"); //$NON-NLS-1$
         }
 
-        String source = cast(String) value;
+        String source = stringcast( value );
         ParseResult result = new ParseResult();
         if (!primitive && source.trim().length() is 0) {
             return result;
@@ -144,7 +150,7 @@ public class StringToNumberParser {
         }
 
         return BindingMessages.formatString(
-                "Validate_NumberOutOfRangeError", [ cast(Object)min, max ]); //$NON-NLS-1$
+                "Validate_NumberOutOfRangeError", [ cast(Object)stringcast(min), stringcast(max) ]); //$NON-NLS-1$
     }
 
     /**
@@ -205,7 +211,7 @@ public class StringToNumberParser {
         }
 
         throw new IllegalArgumentException(
-                "Number of type [" + number.getClass().getName() + "] is not supported."); //$NON-NLS-1$ //$NON-NLS-2$
+                Format("Number of type [{}] is not supported.", number.classinfo.name )); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -273,7 +279,7 @@ public class StringToNumberParser {
         }
 
         throw new IllegalArgumentException(
-                "Number of type [" + number.getClass().getName() + "] is not supported."); //$NON-NLS-1$ //$NON-NLS-2$
+                Format("Number of type [{}] is not supported.", number.classinfo.name)); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

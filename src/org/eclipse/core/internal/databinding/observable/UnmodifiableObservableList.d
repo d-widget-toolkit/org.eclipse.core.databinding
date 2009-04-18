@@ -39,14 +39,16 @@ public class UnmodifiableObservableList : ObservableList {
      */
     private IObservableList wrappedList;
 
-    private IListChangeListener listChangeListener = new class() IListChangeListener {
+    private IListChangeListener listChangeListener;
+    class ListChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             // Fires a Change and then ListChange event.
             fireListChange(event.diff);
         }
     };
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent event) {
             fireStale();
         }
@@ -56,6 +58,8 @@ public class UnmodifiableObservableList : ObservableList {
      * @param wrappedList
      */
     public this(IObservableList wrappedList) {
+listChangeListener = new ListChangeListener();
+staleListener = new StaleListener();
         super(wrappedList.getRealm(), wrappedList, wrappedList.getElementType());
         this.wrappedList = wrappedList;
 

@@ -28,6 +28,15 @@ import com.ibm.icu.text.NumberFormat;
  */
 public class NumberToIntegerConverter : NumberToNumberConverter ,
         IConverter {
+    public override Object convert(Object fromObject){
+        return super.convert(fromObject);
+    }
+    public override Object getFromType() {
+        return super.getFromType();
+    }
+    public override Object getToType() {
+        return super.getToType();
+    }
 
     /**
      * @param numberFormat
@@ -35,8 +44,8 @@ public class NumberToIntegerConverter : NumberToNumberConverter ,
      * @param primitive
      */
     public this(NumberFormat numberFormat,
-            ClassInfo fromType, bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Integer.TYPE : Integer.classinfo);
+            TypeInfo fromType, bool primitive) {
+        super(numberFormat, fromType, (primitive) ? Integer.TYPE : typeid(Integer));
     }
 
     /* (non-Javadoc)

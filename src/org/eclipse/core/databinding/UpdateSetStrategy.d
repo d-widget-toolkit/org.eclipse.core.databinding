@@ -22,6 +22,19 @@ import org.eclipse.core.internal.databinding.BindingMessages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+    /**
+     * Helper method allowing API evolution of the above constant values. The
+     * compiler will not inline constant values into client code if values are
+     * "computed" using this helper.
+     * 
+     * @param i
+     *            an integer
+     * @return the same integer
+     */
+    private int notInlined(int i) {
+        return i;
+    }
+
 /**
  * Customizes a {@link Binding} between two
  * {@link IObservableSet observable sets}. The following behaviors can be
@@ -70,19 +83,6 @@ public class UpdateSetStrategy : UpdateStrategy {
      * observable state.
      */
     public final static int POLICY_UPDATE = notInlined(8);
-
-    /**
-     * Helper method allowing API evolution of the above constant values. The
-     * compiler will not inline constant values into client code if values are
-     * "computed" using this helper.
-     * 
-     * @param i
-     *            an integer
-     * @return the same integer
-     */
-    private static int notInlined(int i) {
-        return i;
-    }
 
     protected IConverter converter;
 
@@ -165,13 +165,16 @@ public class UpdateSetStrategy : UpdateStrategy {
         if (converter !is null) {
             if (sourceType !is null) {
                 checkAssignable(converter.getFromType(), sourceType,
-                        "converter does not convert from type " + sourceType); //$NON-NLS-1$
+                        "converter does not convert from type " ~ String_valueOf(sourceType)); //$NON-NLS-1$
             }
             if (destinationType !is null) {
                 checkAssignable(converter.getToType(), destinationType,
-                        "converter does not convert to type " + destinationType); //$NON-NLS-1$
+                        "converter does not convert to type " ~ String_valueOf(destinationType)); //$NON-NLS-1$
             }
         }
+    }
+    package void fillDefaults_package(IObservableSet source, IObservableSet destination) {
+        fillDefaults(source, destination);
     }
 
     /**
@@ -211,6 +214,9 @@ public class UpdateSetStrategy : UpdateStrategy {
         }
         return Status.OK_STATUS;
     }
+    package IStatus doAdd_package( IObservableSet observableSet, Object element) {
+        return doAdd(observableSet, element);
+    }
 
     /**
      * Removes the element at the given index from the given observable list.
@@ -229,5 +235,8 @@ public class UpdateSetStrategy : UpdateStrategy {
                     ex);
         }
         return Status.OK_STATUS;
+    }
+    package IStatus doRemove_package(IObservableSet observableSet, Object element) {
+        return doRemove(observableSet, element );
     }
 }

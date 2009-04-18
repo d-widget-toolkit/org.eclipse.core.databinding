@@ -100,10 +100,10 @@ public class WritableList : ObservableList {
         int size = wrappedList.size();
         if (oldIndex < 0 || oldIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "oldIndex: " + oldIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("oldIndex: {}, size:{}", oldIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (newIndex < 0 || newIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "newIndex: " + newIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("newIndex: {}, size:{}", newIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (oldIndex is newIndex)
             return wrappedList.get(oldIndex);
         Object element = wrappedList.remove(oldIndex);
@@ -114,7 +114,7 @@ public class WritableList : ObservableList {
         return element;
     }
 
-    public Object remove(int index) {
+    public override Object remove(int index) {
         checkRealm();
         Object oldElement = wrappedList.remove(index);
         fireListChange(Diffs.createListDiff(Diffs.createListDiffEntry(index,
@@ -167,7 +167,8 @@ public class WritableList : ObservableList {
         return added;
     }
 
-    public bool remove(Object o) {
+    public alias ObservableList.remove remove;
+    public override bool remove(Object o) {
         checkRealm();
         int index = wrappedList.indexOf(o);
         if (index is -1) {

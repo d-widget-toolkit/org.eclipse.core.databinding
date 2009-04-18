@@ -39,12 +39,13 @@ public abstract class AbstractObservableTree : AbstractObservable
 
     private bool stale;
 
-    private ListenerList treeListeners = new ListenerListcast(ListenerList.IDENTITY);
+    private ListenerList treeListeners;
 
     /**
      * @param realm
      */
     public this(Realm realm) {
+        treeListeners = new ListenerList(ListenerList.IDENTITY);
         super(realm);
     }
 
@@ -53,7 +54,7 @@ public abstract class AbstractObservableTree : AbstractObservable
     }
 
     public void addTreeChangeListener(ITreeChangeListener listener) {
-        treeListeners.add(listener);
+        treeListeners.add(cast(Object)listener);
     }
 
     public int getChildCount(TreePath parentPath) {
@@ -85,7 +86,7 @@ public abstract class AbstractObservableTree : AbstractObservable
     }
 
     public void removeTreeChangeListener(ITreeChangeListener listener) {
-        treeListeners.remove(listener);
+        treeListeners.remove(cast(Object)listener);
     }
 
     public void setChildCount(TreePath parentPath, int count) {
@@ -110,7 +111,7 @@ public abstract class AbstractObservableTree : AbstractObservable
                                 Policy.JFACE_DATABINDING, 
                                 IStatus.OK,
                                 BindingMessages
-                                        .getStringcast(BindingMessages.INDEX_OUT_OF_RANGE), 
+                                        .getString(BindingMessages.INDEX_OUT_OF_RANGE), 
                                         null));
             }
         }

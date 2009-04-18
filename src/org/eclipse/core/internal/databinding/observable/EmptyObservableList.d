@@ -32,8 +32,41 @@ import org.eclipse.core.runtime.Assert;
  * Singleton empty list
  */
 public class EmptyObservableList : IObservableList {
+// DWT start: additional methods in List
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    public String[] toArray( String[] a ){
+        auto d = toArray();
+        if( a.length < d.length ){
+            a.length = d.length;
+        }
+        for( int i = 0; i < d.length; i++ ){
+            a[i] = stringcast(d[i]);
+        }
+        return a;
+    }
+// DWT end: additional methods in List
 
-    private static final List emptyList = Collections.EMPTY_LIST;
+    private static List emptyList;
+    static this(){
+        emptyList = Collections.EMPTY_LIST;
+    }
 
     private Realm realm;
     private Object elementType;
@@ -207,7 +240,7 @@ public class EmptyObservableList : IObservableList {
         return realm;
     }
 
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         checkRealm();
         if (obj is this)
             return true;
@@ -219,7 +252,7 @@ public class EmptyObservableList : IObservableList {
         return (cast(List) obj).isEmpty();
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         checkRealm();
         return 1;
     }

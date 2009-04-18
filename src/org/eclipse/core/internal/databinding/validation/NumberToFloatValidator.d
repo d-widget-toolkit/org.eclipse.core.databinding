@@ -25,13 +25,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class NumberToFloatValidator : NumberToNumberValidator {
-    private static final Float MIN = new Floatcast(Float.MIN_VALUE);
-    private static final Float MAX = new Floatcast(Float.MAX_VALUE);
+    private static Float MIN;
+    private static Float MAX;
     
     /**
      * @param converter
      */
     public this(NumberToFloatConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Float(Float.MIN_VALUE);
+            MAX = new Float(Float.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

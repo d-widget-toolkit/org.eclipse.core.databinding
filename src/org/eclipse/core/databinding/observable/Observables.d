@@ -64,7 +64,7 @@ public class Observables {
      */
     public static IObservableValue unmodifiableObservableValue(
             IObservableValue value) {
-        Assert.isNotNull(value, "Argument 'value' cannot be null"); //$NON-NLS-1$
+        Assert.isNotNull(cast(Object)value, "Argument 'value' cannot be null"); //$NON-NLS-1$
         return new UnmodifiableObservableValue(value);
     }
 
@@ -278,7 +278,7 @@ public class Observables {
      * @return an observable set backed by the given set
      */
     public static IObservableSet staticObservableSet(Set set) {
-        return staticObservableSet(Realm.getDefault(), set, Object.classinfo);
+        return staticObservableSet(Realm.getDefault(), set, typeid(Object));
     }
 
     /**
@@ -307,7 +307,7 @@ public class Observables {
      * @return an observable set backed by the given unchanging set
      */
     public static IObservableSet staticObservableSet(Realm realm, Set set) {
-        return staticObservableSet(realm, set, Object.classinfo);
+        return staticObservableSet(realm, set, typeid(Object));
     }
 
     /**
@@ -326,6 +326,7 @@ public class Observables {
     public static IObservableSet staticObservableSet(Realm realm, Set set,
             Object elementType) {
         return new class(realm, set, elementType) ObservableSet {
+            this(Realm r, Set s, Object e ){ super(r, s, e);}
             public void addChangeListener(IChangeListener listener) {
             }
 
@@ -372,7 +373,7 @@ public class Observables {
      * @return an observable list backed by the given unchanging list
      */
     public static IObservableList staticObservableList(List list) {
-        return staticObservableList(Realm.getDefault(), list, Object.classinfo);
+        return staticObservableList(Realm.getDefault(), list, typeid(Object));
     }
 
     /**
@@ -402,7 +403,7 @@ public class Observables {
      * @return an observable list backed by the given unchanging list
      */
     public static IObservableList staticObservableList(Realm realm, List list) {
-        return staticObservableList(realm, list, Object.classinfo);
+        return staticObservableList(realm, list, typeid(Object));
     }
 
     /**
@@ -421,6 +422,7 @@ public class Observables {
     public static IObservableList staticObservableList(Realm realm, List list,
             Object elementType) {
         return new class(realm, list, elementType) ObservableList {
+            this(Realm r, List s, Object e ){ super(r, s, e);}
             public void addChangeListener(IChangeListener listener) {
             }
 
@@ -488,7 +490,7 @@ public class Observables {
      */
     public static IObservableFactory mapEntryValueFactory(
             IObservableMap map, Object valueType) {
-        return new class() IObservableFactory {
+        return new class(map, valueType) IObservableFactory {
             IObservableMap map_;
             Object valueType_;
             this(IObservableMap a, Object b){

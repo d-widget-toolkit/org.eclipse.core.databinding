@@ -23,11 +23,17 @@ import org.eclipse.core.runtime.IStatus;
  * @since 1.0
  */
 public class StatusToStringConverter : Converter , IConverter {
+    public override Object getFromType() {
+        return super.getFromType();
+    }
+    public override Object getToType() {
+        return super.getToType();
+    }
     /**
      * Constructs a new instance.
      */
     public this() {
-        super(IStatus.classinfo, String.classinfo);
+        super(typeid(IStatus), typeid(StringCls));
     }
     
     /* (non-Javadoc)
@@ -39,6 +45,6 @@ public class StatusToStringConverter : Converter , IConverter {
         }
         
         IStatus status = cast(IStatus) fromObject;
-        return status.getMessage();
+        return stringcast(status.getMessage());
     }
 }

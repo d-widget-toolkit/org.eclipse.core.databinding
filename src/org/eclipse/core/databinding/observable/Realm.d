@@ -78,7 +78,13 @@ import org.eclipse.core.runtime.Status;
  */
 public abstract class Realm {
 
-    private static ThreadLocal defaultRealm = new ThreadLocal();
+    private static ThreadLocal defaultRealm;
+    static this(){
+        defaultRealm = new ThreadLocal();
+    }
+    this(){
+        workQueue = new Queue();
+    }
 
     /**
      * Returns the default realm for the calling thread, or <code>null</code>
@@ -115,7 +121,7 @@ public abstract class Realm {
 
     private Thread workerThread;
 
-    Queue workQueue = new Queue();
+    Queue workQueue;
     
     /**
      * Runs the given runnable. If an exception occurs within the runnable, it
@@ -141,7 +147,7 @@ public abstract class Realm {
                                             IStatus.ERROR,
                                             Policy.JFACE_DATABINDING,
                                             IStatus.OK,
-                                            "Unhandled exception: " + exception.getMessage(), exception)); //$NON-NLS-1$
+                                            "Unhandled exception: " ~ exception.msg, exception)); //$NON-NLS-1$
                 }
                 public void run() {
                     runnable_.run();
@@ -191,7 +197,7 @@ public abstract class Realm {
     public void asyncExec(Runnable runnable) {
         synchronized (workQueue) {
             ensureWorkerThreadIsRunning();
-            workQueue.enqueue(runnable);
+            workQueue.enqueue(cast(Object)runnable);
             workQueue.notifyAll();
         }
     }
@@ -274,6 +280,12 @@ public abstract class Realm {
                     this.notifyAll();
                 }
             }
+        }
+        void notifyAll(){
+            implMissing( __FILE__, __LINE__ );
+        }
+        void wait(){
+            implMissing( __FILE__, __LINE__ );
         }
     }
 

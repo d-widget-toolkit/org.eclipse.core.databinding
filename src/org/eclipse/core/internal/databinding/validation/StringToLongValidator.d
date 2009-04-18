@@ -24,13 +24,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class StringToLongValidator : AbstractStringToNumberValidator {
-    private static final Long MIN = new Longcast(Long.MIN_VALUE);
-    private static final Long MAX = new Longcast(Long.MAX_VALUE);
+    private static Long MIN;
+    private static Long MAX;
 
     /**
      * @param converter
      */
     public this(NumberFormatConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Long(Long.MIN_VALUE);
+            MAX = new Long(Long.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

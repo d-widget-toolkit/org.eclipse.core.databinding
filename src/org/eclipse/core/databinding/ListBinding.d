@@ -43,7 +43,8 @@ public class ListBinding : Binding {
     private bool updatingTarget;
     private bool updatingModel;
 
-    private IListChangeListener targetChangeListener = new class() IListChangeListener {
+    private IListChangeListener targetChangeListener;
+    private class TargetChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             if (!updatingTarget) {
                 doUpdate(cast(IObservableList) getTarget(),
@@ -51,8 +52,9 @@ public class ListBinding : Binding {
                         targetToModel, false, false);
             }
         }
-    };
-    private IListChangeListener modelChangeListener = new class() IListChangeListener {
+    }
+    private IListChangeListener modelChangeListener;
+    class ModelChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             if (!updatingModel) {
                 doUpdate(cast(IObservableList) getModel(),
@@ -71,6 +73,8 @@ public class ListBinding : Binding {
     public this(IObservableList target, IObservableList model,
             UpdateListStrategy targetToModelStrategy,
             UpdateListStrategy modelToTargetStrategy) {
+targetChangeListener = new TargetChangeListener();
+modelChangeListener = new ModelChangeListener();
         super(target, model);
         this.targetToModel = targetToModelStrategy;
         this.modelToTarget = modelToTargetStrategy;
@@ -92,7 +96,7 @@ public class ListBinding : Binding {
 
     protected void preInit() {
         validationStatusObservable = new WritableValue(context
-                .getValidationRealm(), Status.OK_STATUS, IStatus.classinfo);
+                .getValidationRealm(), cast(Object)Status.OK_STATUS, typeid(IStatus));
     }
 
     protected void postInit() {
@@ -168,7 +172,7 @@ public class ListBinding : Binding {
                             ListDiffEntry listDiffEntry = diffEntries[i];
                             if (listDiffEntry.isAddition()) {
                                 IStatus setterStatus = updateListStrategy_
-                                        .doAdd(
+                                        .doAdd_package(
                                                 destination_,
                                                 updateListStrategy_
                                                         .convert(listDiffEntry
@@ -180,7 +184,7 @@ public class ListBinding : Binding {
                                 // will be out of sync if an error occurred...
                             } else {
                                 IStatus setterStatus = updateListStrategy_
-                                        .doRemove(destination_,
+                                        .doRemove_package(destination_,
                                                 listDiffEntry.getPosition());
                                 
                                 mergeStatus(multiStatus, setterStatus);

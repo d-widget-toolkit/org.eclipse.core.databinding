@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.databinding.observable.list.ListDiff;
 import org.eclipse.core.databinding.observable.list.ListDiffEntry;
@@ -66,7 +65,7 @@ public class Diffs {
                 do {
                     done = true;
                     Object oldValue = oldList.get(index);
-                    if (oldValue is null ? newValue !is null : !oldValue.equals(newValue)) {
+                    if (oldValue is null ? newValue !is null : !oldValue.opEquals(newValue)) {
                         int oldIndexOfNewValue = listIndexOf(oldList, newValue, index);
                         if (oldIndexOfNewValue !is -1) {
                             int newIndexOfOldValue = listIndexOf(newList, oldValue, index);
@@ -122,7 +121,7 @@ public class Diffs {
         int size = list.size();
         for (int i=index; i<size;i++) {
             Object candidate = list.get(i);
-            if (candidateisnull ? objectisnull : candidate.equals(object)) {
+            if (candidate is null ? object is null : candidate.opEquals(object)) {
                 return i;
             }
         }
@@ -142,7 +141,7 @@ public class Diffs {
      */
     public static final bool equals(Object left, Object right) {
         return left is null ? right is null : ((right !is null) && left
-                .equals(right));
+                .opEquals(right));
     }
 
     /**
@@ -175,7 +174,7 @@ public class Diffs {
         final Map oldValues = new HashMap();
         final Map newValues = new HashMap();
         for (Iterator it = oldMap.entrySet().iterator(); it.hasNext();) {
-            Map.Entry oldEntry = cast(Entry) it.next();
+            Map.Entry oldEntry = cast(Map.Entry) it.next();
             Object oldKey = oldEntry.getKey();
             if (addedKeys.remove(oldKey)) {
                 // potentially changed key since it is in oldMap and newMap
@@ -223,6 +222,18 @@ public class Diffs {
      * @param newValue
      * @return a value diff
      */
+    public static ValueDiff createValueDiff(String oldValue,
+            Object newValue) {
+        return createValueDiff( stringcast(oldValue), newValue );
+    }
+    public static ValueDiff createValueDiff(Object oldValue,
+            String newValue) {
+        return createValueDiff( oldValue, stringcast(newValue) );
+    }
+    public static ValueDiff createValueDiff(String oldValue,
+            String newValue) {
+        return createValueDiff( stringcast(oldValue), stringcast(newValue) );
+    }
     public static ValueDiff createValueDiff(Object oldValue,
             Object newValue) {
         return new class(oldValue, newValue) ValueDiff {

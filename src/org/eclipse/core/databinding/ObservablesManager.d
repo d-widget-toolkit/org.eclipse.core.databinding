@@ -36,14 +36,17 @@ import org.eclipse.core.internal.databinding.Pair;
  */
 public class ObservablesManager {
 
-    private Set managedObservables = new HashSet();
-    private Set excludedObservables = new HashSet();
-    private Map contexts = new HashMap();
+    private Set managedObservables;
+    private Set excludedObservables;
+    private Map contexts;
 
     /**
      * Create a new observables manager.
      */
     public this() {
+managedObservables = new HashSet();
+excludedObservables = new HashSet();
+contexts = new HashMap();
     }
 
     /**
@@ -53,7 +56,7 @@ public class ObservablesManager {
      *            the observable
      */
     public void addObservable(IObservable observable) {
-        managedObservables.add(observable);
+        managedObservables.add(cast(Object)observable);
     }
 
     /**
@@ -64,7 +67,7 @@ public class ObservablesManager {
      *            the observable
      */
     public void excludeObservable(IObservable observable) {
-        excludedObservables.add(observable);
+        excludedObservables.add(cast(Object)observable);
     }
 
     /**
@@ -104,10 +107,10 @@ public class ObservablesManager {
             for (Iterator it2 = context.getBindings().iterator(); it2.hasNext();) {
                 Binding binding = cast(Binding) it2.next();
                 if (disposeTargets) {
-                    observables.add(binding.getTarget());
+                    observables.add(cast(Object)binding.getTarget());
                 }
                 if (disposeModels) {
-                    observables.add(binding.getModel());
+                    observables.add(cast(Object)binding.getModel());
                 }
             }
         }

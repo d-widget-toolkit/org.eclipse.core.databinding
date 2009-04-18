@@ -40,7 +40,8 @@ public class DetailObservableMap : ObservableMap {
 
     private IObservableMap detailMap;
 
-    private IValueChangeListener masterChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener masterChangeListener;
+    class MasterChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             Map oldMap = new HashMap(wrappedMap);
             updateDetailMap();
@@ -48,7 +49,8 @@ public class DetailObservableMap : ObservableMap {
         }
     };
 
-    private IMapChangeListener detailChangeListener = new class() IMapChangeListener {
+    private IMapChangeListener detailChangeListener;
+    class DetailChangeListener : IMapChangeListener {
         public void handleMapChange(MapChangeEvent event) {
             if (!updating) {
                 fireMapChange(event.diff);
@@ -67,6 +69,8 @@ public class DetailObservableMap : ObservableMap {
      */
     public this(IObservableFactory detailFactory,
             IObservableValue master) {
+masterChangeListener = new MasterChangeListener();
+detailChangeListener = new DetailChangeListener();
         super(master.getRealm(), Collections.EMPTY_MAP);
         this.master = master;
         this.detailFactory = detailFactory;

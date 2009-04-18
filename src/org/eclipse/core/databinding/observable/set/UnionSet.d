@@ -14,6 +14,7 @@ module org.eclipse.core.databinding.observable.set.UnionSet;
 import org.eclipse.core.databinding.observable.set.ISetChangeListener;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.set.ObservableSet;
 
 import java.lang.all;
@@ -66,18 +67,25 @@ public final class UnionSet : ObservableSet {
      */
     public this(IObservableSet[] childSets) {
         super(childSets[0].getRealm(), null, childSets[0].getElementType());
-        System.arraycopy(childSets, 0, this.childSets = new IObservableSet[childSets.length], 0, childSets.length);
-        this.stalenessTracker = new StalenessTracker(childSets,
+childSetChangeListener = new ChildSetChangeListener();
+stalenessConsumer = new StalenessConsumer();
+        this.childSets = new IObservableSet[childSets.length];
+        for( int i = 0; i < childSets.length; i++ ){
+            this.childSets[i] = childSets[i];
+        }
+        this.stalenessTracker = new StalenessTracker(arraycast!(IObservable)(childSets),
                 stalenessConsumer);
     }
 
-    private ISetChangeListener childSetChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener childSetChangeListener;
+    class ChildSetChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             processAddsAndRemoves(event.diff.getAdditions(), event.diff.getRemovals());
         }
-    };
+    }
 
-    private IStalenessConsumer stalenessConsumer = new class() IStalenessConsumer {
+    private IStalenessConsumer stalenessConsumer;
+    class StalenessConsumer : IStalenessConsumer {
         public void setStale(bool stale) {
             bool oldStale = this.outer.stale;
             this.outer.stale = stale;
@@ -85,7 +93,7 @@ public final class UnionSet : ObservableSet {
                 fireStale();
             }
         }
-    };
+    }
 
     public bool isStale() {
         getterCalled();
@@ -154,7 +162,7 @@ public final class UnionSet : ObservableSet {
             next.addSetChangeListener(childSetChangeListener);
             incrementRefCounts(next);
         }
-        stalenessTracker = new StalenessTracker(childSets, stalenessConsumer);
+        stalenessTracker = new StalenessTracker(arraycast!(IObservable)(childSets), stalenessConsumer);
         setWrappedSet(refCounts.keySet());
     }
 

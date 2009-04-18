@@ -48,7 +48,7 @@ public class StalenessObservableValue : AbstractObservableValue {
 
     private IObservable tracked;
     private bool stale;
-    private MyListener listener = new MyListener();
+    private MyListener listener;
 
     /**
      * Constructs a StalenessObservableValue that tracks the staleness of the
@@ -58,6 +58,7 @@ public class StalenessObservableValue : AbstractObservableValue {
      *            the observable to track
      */
     public this(IObservable observable) {
+        listener = new MyListener();
         super(observable.getRealm());
         this.tracked = observable;
         this.stale = observable.isStale();

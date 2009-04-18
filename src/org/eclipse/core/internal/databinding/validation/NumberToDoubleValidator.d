@@ -25,13 +25,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class NumberToDoubleValidator : NumberToNumberValidator {
-    private static final Double MIN = new Doublecast(Double.MIN_VALUE);
-    private static final Double MAX = new Doublecast(Double.MAX_VALUE);
+    private static Double MIN;
+    private static Double MAX;
     
     /**
      * @param converter
      */
     public this(NumberToDoubleConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Double(Double.MIN_VALUE);
+            MAX = new Double(Double.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

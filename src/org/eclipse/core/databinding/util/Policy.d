@@ -45,9 +45,9 @@ public class Policy {
     private static ILogger getDummyLog() {
         return new class() ILogger {
             public void log(IStatus status) {
-                System.err.println(status.getPlugin() + " - " + status.getCode() + " - " + status.getMessage());  //$NON-NLS-1$//$NON-NLS-2$
+                getDwtLogger().error( __FILE__, __LINE__, "{} - {} - {}", status.getPlugin(), status.getCode(), status.getMessage());  //$NON-NLS-1$//$NON-NLS-2$
                 if( status.getException() !is null ) {
-                    status.getException().printStackTrace(System.err);
+                    ExceptionPrintStackTrace(status.getException());
                 }
             }
         };

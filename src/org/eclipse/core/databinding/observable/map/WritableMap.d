@@ -62,7 +62,7 @@ public class WritableMap : ObservableMap {
         checkRealm();
         Object result = wrappedMap.put(key, value);
         if (!Util.equals(result, value)) {
-            if (resultisnull) {
+            if (result is null) {
                 fireMapChange(Diffs.createMapDiffSingleAdd(key, value));
             } else {
                 fireMapChange(Diffs.createMapDiffSingleChange(key, result,
@@ -106,7 +106,7 @@ public class WritableMap : ObservableMap {
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = cast(Entry) it.next();
             Object previousValue = wrappedMap.put(entry.getKey(), entry.getValue());
-            if (previousValueisnull) {
+            if (previousValue is null) {
                 addedKeys.add(entry.getKey());
             } else {
                 changes.put(entry.getKey(), previousValue);

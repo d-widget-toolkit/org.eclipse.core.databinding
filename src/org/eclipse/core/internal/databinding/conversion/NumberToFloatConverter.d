@@ -30,9 +30,9 @@ public class NumberToFloatConverter : NumberToNumberConverter {
      * @param fromType
      * @param primitive
      */
-    public this(NumberFormat numberFormat, ClassInfo fromType,
+    public this(NumberFormat numberFormat, TypeInfo fromType,
             bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Float.TYPE : Float.classinfo);
+        super(numberFormat, fromType, (primitive) ? Float.TYPE : typeid(Float));
     }
 
     /* (non-Javadoc)

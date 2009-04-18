@@ -94,7 +94,7 @@ public final class AggregateValidationStatus : IObservableValue {
      * @see DataBindingContext#getValidationStatusProviders()
      */
     public this(
-            IObservableCollection validationStatusProviders, strategy) {
+            IObservableCollection validationStatusProviders, int strategy) {
         this(Realm.getDefault(), validationStatusProviders, strategy);
     }
 
@@ -113,25 +113,25 @@ public final class AggregateValidationStatus : IObservableValue {
     public this(Realm realm,
             IObservableCollection validationStatusProviders, int strategy) {
         if (strategy is MERGED) {
-            implementation = new class(realm, IStatus.classinfo, validationStatusProviders) ComputedValue {
+            implementation = new class(realm, typeid(IStatus), validationStatusProviders) ComputedValue {
                 IObservableCollection validationStatusProviders_;
-                this(Realm r, ClassInfo c, IObservableCollection v){
+                this(Realm r, TypeInfo c, IObservableCollection v){
                     super(r, c);
                     validationStatusProviders_=v;
                 }
                 protected Object calculate() {
-                    return getStatusMerged(validationStatusProviders_);
+                    return cast(Object)getStatusMerged(validationStatusProviders_);
                 }
             };
         } else {
-            implementation = new class(realm, IStatus.classinfo, validationStatusProviders) ComputedValue {
+            implementation = new class(realm, typeid(IStatus), validationStatusProviders) ComputedValue {
                 IObservableCollection validationStatusProviders_;
-                this(Realm r, ClassInfo c, IObservableCollection v){
+                this(Realm r, TypeInfo c, IObservableCollection v){
                     super(r, c);
                     validationStatusProviders_=v;
                 }
                 protected Object calculate() {
-                    return getStatusMaxSeverity(validationStatusProviders_);
+                    return cast(Object)getStatusMaxSeverity(validationStatusProviders_);
                 }
             };
         }
@@ -215,7 +215,7 @@ public final class AggregateValidationStatus : IObservableValue {
             IStatus status = cast(IStatus) validationStatusProvider
                     .getValidationStatus().getValue();
             if (!status.isOK()) {
-                statuses.add(status);
+                statuses.add(cast(Object)status);
             }
         }
         if (statuses.size() is 1) {
@@ -224,7 +224,7 @@ public final class AggregateValidationStatus : IObservableValue {
         if (!statuses.isEmpty()) {
             MultiStatus result = new MultiStatus(Policy.JFACE_DATABINDING, 0,
                     BindingMessages
-                            .getStringcast(BindingMessages.MULTIPLE_PROBLEMS), null);
+                            .getString(BindingMessages.MULTIPLE_PROBLEMS), null);
             for (Iterator it = statuses.iterator(); it.hasNext();) {
                 IStatus status = cast(IStatus) it.next();
                 result.merge(status);

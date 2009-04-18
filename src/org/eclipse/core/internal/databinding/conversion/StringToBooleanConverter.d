@@ -25,7 +25,7 @@ public class StringToBooleanConverter : StringToBooleanPrimitiveConverter {
      * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object source) {
-        String sourceString = cast(String) source;
+        String sourceString = stringcast( source);
         if ("".equals(sourceString.trim())) { //$NON-NLS-1$
             return null;
         }
@@ -33,7 +33,7 @@ public class StringToBooleanConverter : StringToBooleanPrimitiveConverter {
     }
 
     public Object getToType() {
-        return Boolean.classinfo;
+        return typeid(Boolean);
     }
 
 }

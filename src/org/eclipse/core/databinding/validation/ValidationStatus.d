@@ -111,9 +111,9 @@ public class ValidationStatus : Status {
     /*
      * (non-Javadoc)
      * 
-     * @see java.lang.Object#hashCode()
+     * @see java.lang.Object#toHash()
      */
-    public int hashCode() {
+    public hash_t toHash() {
         final int prime = 31;
         int result = 1;
 
@@ -121,10 +121,10 @@ public class ValidationStatus : Status {
         int severity = getSeverity();
         Throwable throwable = getException();
 
-        result = prime * result + ((message is null) ? 0 : message.hashCode());
+        result = prime * result + ((message is null) ? 0 : String_toHash(message));
         result = prime * result + severity;
         result = prime * result
-                + ((throwable is null) ? 0 : throwable.hashCode());
+                + ((throwable is null) ? 0 : throwable.toHash());
         return result;
     }
 
@@ -133,12 +133,12 @@ public class ValidationStatus : Status {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (this is obj)
             return true;
         if (obj is null)
             return false;
-        if (getClass() !is obj.getClass())
+        if (this.classinfo !is obj.classinfo)
             return false;
         final ValidationStatus other = cast(ValidationStatus) obj;
 
@@ -147,12 +147,12 @@ public class ValidationStatus : Status {
         if (getMessage() is null) {
             if (other.getMessage() !is null)
                 return false;
-        } else if (!getMessage().equals(other.getMessage()))
+        } else if (getMessage() != other.getMessage())
             return false;
         if (getException() is null) {
             if (other.getException() !is null)
                 return false;
-        } else if (!getException().equals(other.getException()))
+        } else if (!getException().opEquals(other.getException()))
             return false;
         return true;
     }

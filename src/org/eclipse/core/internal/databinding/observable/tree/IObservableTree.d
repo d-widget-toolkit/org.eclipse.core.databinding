@@ -37,13 +37,16 @@ import org.eclipse.core.databinding.observable.IObservable;
  * 
  * @since 1.1
  */
+    static this(){
+        IObservableTree.UNKNOWN_ELEMENT = new Object();
+    }
 public interface IObservableTree : IObservable {
     
     /**
      * Element that can be returned from synchronous getters if this observable
      * tree is lazy.
      */
-    public final static Object UNKNOWN_ELEMENT = new Object();
+    public static Object UNKNOWN_ELEMENT;
     
     /**
      * @param listener

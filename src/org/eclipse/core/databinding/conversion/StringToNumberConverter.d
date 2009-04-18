@@ -12,12 +12,12 @@
 module org.eclipse.core.databinding.conversion.StringToNumberConverter;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
-import org.eclipse.core.internal.databinding.conversion.StringToNumberParser.ParseResult;
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
 import com.ibm.icu.text.NumberFormat;
@@ -29,7 +29,7 @@ import com.ibm.icu.text.NumberFormat;
  * @since 1.0
  */
 public class StringToNumberConverter : NumberFormatConverter {
-    private ClassInfo toType;
+    private TypeInfo toType;
     /**
      * NumberFormat instance to use for conversion. Access must be synchronized.
      */
@@ -49,19 +49,33 @@ public class StringToNumberConverter : NumberFormatConverter {
     /**
      * The boxed type of the toType;
      */
-    private final ClassInfo boxedType;
+    private final TypeInfo boxedType;
 
-    private static final Integer MIN_INTEGER = new Integercast(Integer.MIN_VALUE);
-    private static final Integer MAX_INTEGER = new Integercast(Integer.MAX_VALUE);
+    private static const Integer MIN_INTEGER;
+    private static const Integer MAX_INTEGER;
 
-    private static final Double MIN_DOUBLE = new Double(-Double.MAX_VALUE);
-    private static final Double MAX_DOUBLE = new Doublecast(Double.MAX_VALUE);
+    private static const Double MIN_DOUBLE;
+    private static const Double MAX_DOUBLE;
 
-    private static final Long MIN_LONG = new Longcast(Long.MIN_VALUE);
-    private static final Long MAX_LONG = new Longcast(Long.MIN_VALUE);
+    private static const Long MIN_LONG;
+    private static const Long MAX_LONG;
 
-    private static final Float MIN_FLOAT = new Float(-Float.MAX_VALUE);
-    private static final Float MAX_FLOAT = new Floatcast(Float.MAX_VALUE);
+    private static const Float MIN_FLOAT;
+    private static const Float MAX_FLOAT;
+
+    static this(){
+        MIN_INTEGER = new Integer(Integer.MIN_VALUE);
+        MAX_INTEGER = new Integer(Integer.MAX_VALUE);
+
+        MIN_DOUBLE = new Double(-Double.MAX_VALUE);
+        MAX_DOUBLE = new Double(Double.MAX_VALUE);
+
+        MIN_LONG = new Long(Long.MIN_VALUE);
+        MAX_LONG = new Long(Long.MIN_VALUE);
+
+        MIN_FLOAT = new Float(-Float.MAX_VALUE);
+        MAX_FLOAT = new Float(Float.MAX_VALUE);
+    }
 
     /**
      * @param numberFormat
@@ -76,9 +90,9 @@ public class StringToNumberConverter : NumberFormatConverter {
      *            a convenience that allows for the checking against one type
      *            rather than boxed and unboxed types
      */
-    private this(NumberFormat numberFormat, ClassInfo toType,
-            Number min, Number max, ClassInfo boxedType) {
-        super(String.classinfo, toType, numberFormat);
+    private this(NumberFormat numberFormat, TypeInfo toType,
+            Number min, Number max, TypeInfo boxedType) {
+        super(typeid(StringCls), toType, numberFormat);
 
         this.toType = toType;
         this.numberFormat = numberFormat;
@@ -100,15 +114,15 @@ public class StringToNumberConverter : NumberFormatConverter {
      *             if conversion was not possible
      */
     public Object convert(Object fromObject) {
-        ParseResult result = StringToNumberParser.parse(fromObject,
-                numberFormat, toType.isPrimitive());
+        StringToNumberParser.ParseResult result = StringToNumberParser.parse(fromObject,
+                numberFormat, isJavaPrimitive(toType));
 
         if (result.getPosition() !is null) {
             // this shouldn't happen in the pipeline as validation should catch
             // it but anyone can call convert so we should return a properly
             // formatted message in an exception
             throw new IllegalArgumentException(StringToNumberParser
-                    .createParseErrorMessage(cast(String) fromObject, result
+                    .createParseErrorMessage(stringcast(fromObject), result
                             .getPosition()));
         } else if (result.getNumber() is null) {
             // if an error didn't occur and the number is null then it's a boxed
@@ -121,23 +135,23 @@ public class StringToNumberConverter : NumberFormatConverter {
          * validator should have validated this already but we shouldn't assume
          * this has occurred.
          */
-        if (Integer.classinfo.equals(boxedType)) {
+        if (typeid(Integer) is (boxedType)) {
             if (StringToNumberParser.inIntegerRange(result.getNumber())) {
                 return new Integer(result.getNumber().intValue());
             }
-        } else if (Double.classinfo.equals(boxedType)) {
+        } else if (typeid(Double) is (boxedType)) {
             if (StringToNumberParser.inDoubleRange(result.getNumber())) {
                 return new Double(result.getNumber().doubleValue());
             }
-        } else if (Long.classinfo.equals(boxedType)) {
+        } else if (typeid(Long) is (boxedType)) {
             if (StringToNumberParser.inLongRange(result.getNumber())) {
                 return new Long(result.getNumber().longValue());
             }
-        } else if (Float.classinfo.equals(boxedType)) {
+        } else if (typeid(Float) is (boxedType)) {
             if (StringToNumberParser.inFloatRange(result.getNumber())) {
                 return new Float(result.getNumber().floatValue());
             }
-        } else if (BigInteger.classinfo.equals(boxedType)) {
+        } else if (typeid(BigInteger) is (boxedType)) {
             return (new BigDecimal(result.getNumber().doubleValue()))
                     .toBigInteger();
         }
@@ -152,7 +166,7 @@ public class StringToNumberConverter : NumberFormatConverter {
          * exception is better than returning null and hiding the error.
          */
         throw new IllegalArgumentException(
-                "Could not convert [" + fromObject + "] to type [" + toType + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                Format("Could not convert [{}] to type [{}]", fromObject, toType)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -172,8 +186,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toInteger(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Integer.TYPE : Integer.classinfo, MIN_INTEGER,
-                MAX_INTEGER, Integer.classinfo);
+                (primitive) ? Integer.TYPE : typeid(Integer), MIN_INTEGER,
+                MAX_INTEGER, typeid(Integer));
     }
 
     /**
@@ -193,8 +207,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toDouble(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Double.TYPE : Double.classinfo, MIN_DOUBLE,
-                MAX_DOUBLE, Double.classinfo);
+                (primitive) ? Double.TYPE : typeid(Double), MIN_DOUBLE,
+                MAX_DOUBLE, typeid(Double));
     }
 
     /**
@@ -214,8 +228,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toLong(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Long.TYPE : Long.classinfo, MIN_LONG, MAX_LONG,
-                Long.classinfo);
+                (primitive) ? Long.TYPE : typeid(Long), MIN_LONG, MAX_LONG,
+                typeid(Long));
     }
 
     /**
@@ -235,8 +249,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toFloat(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Float.TYPE : Float.classinfo, MIN_FLOAT, MAX_FLOAT,
-                Float.classinfo);
+                (primitive) ? Float.TYPE : typeid(Float), MIN_FLOAT, MAX_FLOAT,
+                typeid(Float));
     }
 
     /**
@@ -251,7 +265,7 @@ public class StringToNumberConverter : NumberFormatConverter {
      * @return to BigInteger converter with the provided numberFormat
      */
     public static StringToNumberConverter toBigInteger(NumberFormat numberFormat) {
-        return new StringToNumberConverter(numberFormat, BigInteger.classinfo,
-                null, null, BigInteger.classinfo);
+        return new StringToNumberConverter(numberFormat, typeid(BigInteger),
+                null, null, typeid(BigInteger));
     }
 }

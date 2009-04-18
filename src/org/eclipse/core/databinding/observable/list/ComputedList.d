@@ -43,12 +43,12 @@ import org.eclipse.core.databinding.observable.StaleEvent;
  * @since 1.1
  */
 public abstract class ComputedList : AbstractObservableList {
-    private List cachedList = new ArrayList();
+    private List cachedList;
 
     private bool dirty = true;
     private bool stale = false;
 
-    private IObservable[] dependencies = new IObservable[0];
+    private IObservable[] dependencies;
 
     /**
      * Creates a computed list in the default realm and with an unknown (null)
@@ -93,6 +93,8 @@ public abstract class ComputedList : AbstractObservableList {
      *            unknown element type
      */
     public this(Realm realm, Object elementType) {
+cachedList = new ArrayList();
+privateInterface = new PrivateInterface();
         super(realm);
         this.elementType = elementType;
     }
@@ -136,7 +138,7 @@ public abstract class ComputedList : AbstractObservableList {
         }
     }
 
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
 
     private Object elementType;
 

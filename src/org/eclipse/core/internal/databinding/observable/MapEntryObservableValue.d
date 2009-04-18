@@ -35,12 +35,13 @@ public class MapEntryObservableValue : AbstractObservableValue {
     private Object key;
     private Object valueType;
 
-    private IMapChangeListener changeListener = new class() IMapChangeListener {
+    private IMapChangeListener changeListener;
+    class ChangeListener : IMapChangeListener {
         public void handleMapChange(MapChangeEvent event) {
             if (event.diff.getAddedKeys().contains(key)) {
                 final Object newValue = event.diff.getNewValue(key);
                 if (newValue !is null) {
-                    fireValueChange(Diffs.createValueDiff(null, newValue));
+                    fireValueChange(Diffs.createValueDiff(cast(Object)null, newValue));
                 }
             } else if (event.diff.getChangedKeys().contains(key)) {
                 fireValueChange(Diffs.createValueDiff(event.diff
@@ -48,13 +49,14 @@ public class MapEntryObservableValue : AbstractObservableValue {
             } else if (event.diff.getRemovedKeys().contains(key)) {
                 final Object oldValue = event.diff.getOldValue(key);
                 if (oldValue !is null) {
-                    fireValueChange(Diffs.createValueDiff(oldValue, null));
+                    fireValueChange(Diffs.createValueDiff(oldValue, cast(Object)null));
                 }
             }
         }
     };
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent staleEvent) {
             fireStale();
         }
@@ -72,6 +74,8 @@ public class MapEntryObservableValue : AbstractObservableValue {
      */
     public this(IObservableMap map, Object key,
             Object valueType) {
+changeListener = new ChangeListener();
+staleListener = new StaleListener();
         super(map.getRealm());
         this.map = map;
         this.key = key;

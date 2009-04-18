@@ -33,9 +33,10 @@ import org.eclipse.core.databinding.observable.set.SetChangeEvent;
  */
 public abstract class ComputedObservableMap : AbstractObservableMap {
 
-    private final IObservableSet keySet;
+    private final IObservableSet fkeySet;
 
-    private ISetChangeListener setChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener setChangeListener;
+    class SetChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             Set addedKeys = new HashSet(event.diff.getAdditions());
             Set removedKeys = new HashSet(event.diff.getRemovals());
@@ -60,7 +61,7 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
         }
     };
 
-    private Set entrySet = new EntrySet();
+    private Set fentrySet;
 
     private class EntrySet : AbstractSet {
 
@@ -69,7 +70,7 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
 
                 final Iterator keyIterator;
                 this(){
-                    keyIterator = keySet.iterator();
+                    keyIterator = fkeySet.iterator();
                 }
 
                 public bool hasNext() {
@@ -94,6 +95,16 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
                         public Object setValue(Object value) {
                             return put(getKey(), value);
                         }
+
+                        public override equals_t    opEquals(Object o){
+                            implMissing( __FILE__, __LINE__ );
+                            return 0;
+                        }
+                        public override hash_t    toHash(){
+                            implMissing( __FILE__, __LINE__ );
+                            return 0;
+                        }
+
                     };
                 }
 
@@ -104,22 +115,27 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
         }
 
         public int size() {
-            return keySet.size();
+            return fkeySet.size();
         }
 
+        public override String toString(){
+            return super.toString();
+        }
     }
 
     /**
      * @param keySet
      */
-    public this(IObservableSet keySet) {
-        super(keySet.getRealm());
-        this.keySet = keySet;
-        this.keySet.addSetChangeListener(setChangeListener);
+    public this(IObservableSet _keySet) {
+setChangeListener = new SetChangeListener();
+fentrySet = new EntrySet();
+        super(_keySet.getRealm());
+        this.fkeySet = _keySet;
+        this.fkeySet.addSetChangeListener(setChangeListener);
     }
 
     protected void init() {
-        for (Iterator it = this.keySet.iterator(); it.hasNext();) {
+        for (Iterator it = this.fkeySet.iterator(); it.hasNext();) {
             Object key = it.next();
             hookListener(key);
         }
@@ -131,11 +147,11 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
     }
 
     public Set entrySet() {
-        return entrySet;
+        return fentrySet;
     }
     
     public Set keySet() {
-        return keySet;
+        return fkeySet;
     }
 
     final public Object get(Object key) {

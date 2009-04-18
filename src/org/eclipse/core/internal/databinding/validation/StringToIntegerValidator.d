@@ -25,13 +25,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class StringToIntegerValidator : AbstractStringToNumberValidator {
-    private static final Integer MIN = new Integercast(Integer.MIN_VALUE);
-    private static final Integer MAX = new Integercast(Integer.MAX_VALUE);
+    private static Integer MIN;
+    private static Integer MAX;
 
     /**
      * @param converter
      */
     public this(NumberFormatConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Integer(Integer.MIN_VALUE);
+            MAX = new Integer(Integer.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

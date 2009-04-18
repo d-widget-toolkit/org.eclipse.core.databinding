@@ -48,6 +48,9 @@ public class RandomAccessListIterator : ListIterator {
     public void add(Object arg0) {
         delegate_.add(arg0);
     }
+    public void add(String arg0) {
+        add(stringcast(arg0));
+    }
 
     /* (non-Javadoc)
      * @see java.util.ListIterator#hasNext()

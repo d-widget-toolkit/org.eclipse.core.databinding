@@ -50,24 +50,25 @@ import org.eclipse.core.runtime.Assert;
  */
 public class CompositeMap : ObservableMap {
 
-    private Map valueToElements = new HashMap();
+    private Map valueToElements;
 
     // adds that need to go through the second map and thus will be picked up by
     // secondMapListener.
-    private Set pendingAdds = new HashSet();
+    private Set pendingAdds;
 
     // Removes that need to go through the second map and thus will be picked up
     // by
     // secondMapListener. Maps from value being removed to key being removed.
-    private Map pendingRemoves = new HashMap();
+    private Map pendingRemoves;
 
     // Changes that need to go through the second map and thus will be picked up
     // by
     // secondMapListener. Maps from old value to new value and new value to old
     // value.
-    private Map pendingChanges = new HashMap();
+    private Map pendingChanges;
 
-    private IMapChangeListener firstMapListener = new class() IMapChangeListener {
+    private IMapChangeListener firstMapListener;
+    class FirstMapListener : IMapChangeListener {
 
         public void handleMapChange(MapChangeEvent event) {
             MapDiff diff = event.diff;
@@ -158,7 +159,8 @@ public class CompositeMap : ObservableMap {
         }
     };
 
-    private IMapChangeListener secondMapListener = new class() IMapChangeListener {
+    private IMapChangeListener secondMapListener;
+    class SecondMapListener : IMapChangeListener {
 
         public void handleMapChange(MapChangeEvent event) {
             MapDiff diff = event.diff;
@@ -278,7 +280,7 @@ public class CompositeMap : ObservableMap {
         }
     }
 
-    private WritableSetPlus rangeSet = new WritableSetPlus();
+    private WritableSetPlus rangeSet;
 
     /**
      * Creates a new composite map. Because the key set of the second map is
@@ -295,6 +297,13 @@ public class CompositeMap : ObservableMap {
      */
     public this(IObservableMap firstMap,
             IObservableFactory secondMapFactory) {
+valueToElements = new HashMap();
+pendingAdds = new HashSet();
+pendingRemoves = new HashMap();
+pendingChanges = new HashMap();
+firstMapListener = new FirstMapListener();
+secondMapListener = new SecondMapListener();
+rangeSet = new WritableSetPlus();
         super(firstMap.getRealm(), new HashMap());
         this.firstMap = firstMap;
         firstMap.addMapChangeListener(firstMapListener);

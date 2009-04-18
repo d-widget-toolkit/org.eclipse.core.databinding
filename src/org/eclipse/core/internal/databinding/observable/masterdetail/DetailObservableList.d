@@ -40,7 +40,8 @@ public class DetailObservableList : ObservableList , IObserving {
 
     private bool updating = false;
 
-    private IListChangeListener innerChangeListener = new class() IListChangeListener {
+    private IListChangeListener innerChangeListener;
+    class InnerChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             if (!updating) {
                 fireListChange(event.diff);
@@ -65,6 +66,7 @@ public class DetailObservableList : ObservableList , IObserving {
      */
     public this(IObservableFactory factory,
             IObservableValue outerObservableValue, Object detailType) {
+innerChangeListener = new InnerChangeListener();
         super(outerObservableValue.getRealm(), Collections.EMPTY_LIST, detailType);
         this.factory = factory;
         this.outerObservableValue = outerObservableValue;
@@ -74,7 +76,8 @@ public class DetailObservableList : ObservableList , IObserving {
         outerObservableValue.addValueChangeListener(outerChangeListener);
     }
 
-    IValueChangeListener outerChangeListener = new class() IValueChangeListener {
+    IValueChangeListener outerChangeListener;
+    class OuterChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             List oldList = new ArrayList(wrappedList);
             updateInnerObservableList(outerObservableValue);
@@ -98,7 +101,7 @@ public class DetailObservableList : ObservableList , IObserving {
 
             if (detailType !is null) {
                 Object innerValueType = innerObservableList.getElementType();
-                Assert.isTrue(getElementType().equals(innerValueType),
+                Assert.isTrue(cast(bool)getElementType().opEquals(innerValueType),
                         "Cannot change value type in a nested observable list"); //$NON-NLS-1$
             }
             innerObservableList.addListChangeListener(innerChangeListener);

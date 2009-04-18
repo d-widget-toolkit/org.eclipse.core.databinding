@@ -49,9 +49,10 @@ public class MappedSet : ObservableSet {
     /*
      * Map from values (range elements) to Integer ref counts
      */
-    private Map valueCounts = new HashMap();
+    private Map valueCounts;
 
-    private ISetChangeListener domainListener = new class() ISetChangeListener {
+    private ISetChangeListener domainListener;
+    class DomainListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             Set additions = new HashSet();
             for (Iterator it = event.diff.getAdditions().iterator(); it.hasNext();) {
@@ -73,7 +74,8 @@ public class MappedSet : ObservableSet {
         }
     };
 
-    private IMapChangeListener mapChangeListener = new class() IMapChangeListener {
+    private IMapChangeListener mapChangeListener;
+    class MapChangeListener : IMapChangeListener {
         public void handleMapChange(MapChangeEvent event) {
             MapDiff diff = event.diff;
             Set additions = new HashSet();
@@ -114,7 +116,10 @@ public class MappedSet : ObservableSet {
      * @param map
      */
     public this(IObservableSet input, IObservableMap map) {
-        super(input.getRealm(), Collections.EMPTY_SET, Object.classinfo);
+valueCounts = new HashMap();
+domainListener = new DomainListener();
+mapChangeListener = new MapChangeListener();
+        super(input.getRealm(), Collections.EMPTY_SET, typeid(Object));
         setWrappedSet(valueCounts.keySet());
         this.wrappedMap = map;
         this.input = input;

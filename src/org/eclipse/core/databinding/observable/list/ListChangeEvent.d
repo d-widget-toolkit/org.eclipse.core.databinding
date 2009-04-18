@@ -30,9 +30,12 @@ public class ListChangeEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = -9154315534258776672L;
+    private static const long serialVersionUID = -9154315534258776672L;
 
-    static final Object TYPE = new Object();
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     /**
      * Description of the change to the source observable list. Listeners must

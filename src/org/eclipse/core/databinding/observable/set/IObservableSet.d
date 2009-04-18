@@ -122,11 +122,11 @@ public interface IObservableSet : Set, IObservableCollection {
     /**
      * @TrackedGetter
      */
-    bool opEquals(Object o);
+    equals_t opEquals(Object o);
 
     /**
      * @TrackedGetter
      */
-    int hashCode();
+    hash_t toHash();
 
 }

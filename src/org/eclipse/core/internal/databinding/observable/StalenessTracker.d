@@ -30,7 +30,7 @@ import org.eclipse.core.internal.databinding.IdentityWrapper;
  */
 public class StalenessTracker {
 
-    private Map staleMap = new HashMap();
+    private Map staleMap;
 
     private int staleCount = 0;
 
@@ -46,7 +46,7 @@ public class StalenessTracker {
         }
     }
 
-    private ChildListener childListener = new ChildListener();
+    private ChildListener childListener;
 
     /**
      * @param observables
@@ -54,6 +54,8 @@ public class StalenessTracker {
      */
     public this(IObservable[] observables,
             IStalenessConsumer stalenessConsumer) {
+childListener = new ChildListener();
+staleMap = new HashMap();
         this.stalenessConsumer = stalenessConsumer;
         for (int i = 0; i < observables.length; i++) {
             IObservable observable = observables[i];
@@ -68,7 +70,7 @@ public class StalenessTracker {
      */
     public void processStalenessChange(IObservable child, bool callback) {
         bool oldStale = staleCount > 0;
-        IdentityWrapper wrappedChild = new IdentityWrapper(child);
+        IdentityWrapper wrappedChild = new IdentityWrapper(cast(Object)child);
         bool oldChildStale = getOldChildStale(wrappedChild);
         bool newChildStale = child.isStale();
         if (oldChildStale !is newChildStale) {
@@ -113,7 +115,7 @@ public class StalenessTracker {
      */
     public void removeObservable(IObservable observable) {
         bool oldStale = staleCount > 0;
-        IdentityWrapper wrappedChild = new IdentityWrapper(observable);
+        IdentityWrapper wrappedChild = new IdentityWrapper(cast(Object)observable);
         bool oldChildStale = getOldChildStale(wrappedChild);
         if (oldChildStale) {
             staleCount--;

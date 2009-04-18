@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.map.IObservableMap;
 import java.lang.all;
 
 import java.util.AbstractMap;
+import java.util.Set;
 
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.ChangeSupport;
@@ -42,6 +43,41 @@ import org.eclipse.core.runtime.AssertionFailedException;
 public abstract class AbstractObservableMap : AbstractMap ,
         IObservableMap {
 
+    // DWT start reimplement
+    public override int size(){
+        return super.size();
+    }
+    public override bool isEmpty(){
+        return super.isEmpty();
+    }
+    public override bool containsKey(Object o){
+        return super.containsKey(o);
+    }
+    public override bool containsValue(Object o){
+        return super.containsValue(o);
+    }
+    public override Object get(Object o){
+        return super.get(o);
+    }
+    public override Object put(Object key, Object value){
+        return super.put(key, value);
+    }
+    public override equals_t opEquals(Object o){
+        return super.opEquals(o);
+    }
+    public override hash_t toHash(){
+        return super.toHash();
+    }
+    public override Object remove(Object o){
+        return super.remove(o);
+    }
+    public override Set keySet(){
+        return super.keySet();
+    }
+    public override Set values(){
+        return super.values();
+    }
+    // DWT end reimplement
     private ChangeSupport changeSupport;
 
     private bool stale;
@@ -70,6 +106,7 @@ public abstract class AbstractObservableMap : AbstractMap ,
     public this(Realm realm) {
         Assert.isNotNull(realm, "Realm cannot be null"); //$NON-NLS-1$
         changeSupport = new class(realm) ChangeSupport {
+            this(Realm r){ super(r);}
             protected void firstListenerAdded() {
                 this.outer.firstListenerAdded();
             }

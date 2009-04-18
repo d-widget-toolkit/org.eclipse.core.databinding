@@ -38,7 +38,8 @@ public class DetailObservableSet : ObservableSet , IObserving {
 
     private bool updating = false;
 
-    private ISetChangeListener innerChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener innerChangeListener;
+    class InnerChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             if (!updating) {
                 fireSetChange(event.diff);
@@ -61,6 +62,8 @@ public class DetailObservableSet : ObservableSet , IObserving {
      */
     public this(IObservableFactory factory,
             IObservableValue outerObservableValue, Object detailType) {
+innerChangeListener = new InnerChangeListener();
+outerChangeListener = new OuterChangeListener();
         super(outerObservableValue.getRealm(), Collections.EMPTY_SET,
                 detailType);
         this.factory = factory;
@@ -70,7 +73,8 @@ public class DetailObservableSet : ObservableSet , IObserving {
         outerObservableValue.addValueChangeListener(outerChangeListener);
     }
 
-    IValueChangeListener outerChangeListener = new class() IValueChangeListener {
+    IValueChangeListener outerChangeListener;
+    class OuterChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             Set oldSet = new HashSet(wrappedSet);
             updateInnerObservableSet(outerObservableValue);
@@ -95,7 +99,7 @@ public class DetailObservableSet : ObservableSet , IObserving {
             if (elementType !is null) {
                 Object innerValueType = innerObservableSet.getElementType();
 
-                Assert.isTrue(elementType.equals(innerValueType),
+                Assert.isTrue(cast(bool)elementType.opEquals(innerValueType),
                         "Cannot change value type in a nested observable set"); //$NON-NLS-1$
             }
 

@@ -30,13 +30,15 @@ import org.eclipse.core.databinding.observable.set.SetChangeEvent;
  * @since 1.1
  */
 public class UnmodifiableObservableSet : ObservableSet {
-    private ISetChangeListener setChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener setChangeListener;
+    class SetChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             fireSetChange(event.diff);
         }
     };
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent event) {
             fireStale();
         }
@@ -48,6 +50,8 @@ public class UnmodifiableObservableSet : ObservableSet {
      * @param wrappedSet
      */
     public this(IObservableSet wrappedSet) {
+setChangeListener = new SetChangeListener();
+staleListener = new StaleListener();
         super(wrappedSet.getRealm(), wrappedSet, wrappedSet.getElementType());
 
         this.wrappedSet = wrappedSet;

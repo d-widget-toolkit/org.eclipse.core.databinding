@@ -124,7 +124,8 @@ public abstract class MultiValidator : ValidationStatusProvider {
     private IObservableList unmodifiableTargets;
     private IObservableList models;
 
-    IListChangeListener targetsListener = new class() IListChangeListener {
+    IListChangeListener targetsListener;
+    class TargetsListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             event.diff.accept(new class() ListDiffVisitor {
                 public void handleAdd(int index, Object element) {
@@ -140,7 +141,8 @@ public abstract class MultiValidator : ValidationStatusProvider {
         }
     };
 
-    private IChangeListener dependencyListener = new class() IChangeListener {
+    private IChangeListener dependencyListener;
+    class DependencyListener : IChangeListener {
         public void handleChange(ChangeEvent event) {
             revalidate();
         }
@@ -160,13 +162,15 @@ public abstract class MultiValidator : ValidationStatusProvider {
      *            the realm on which validation takes place.
      */
     public this(Realm realm) {
+targetsListener = new TargetsListener();
+dependencyListener = new DependencyListener();
         Assert.isNotNull(realm, "Realm cannot be null"); //$NON-NLS-1$
         this.realm = realm;
 
-        validationStatus = new WritableValue(realm, ValidationStatus.ok(),
-                IStatus.classinfo);
+        validationStatus = new WritableValue(realm, cast(Object)ValidationStatus.ok(),
+                typeid(IStatus));
 
-        targets = new WritableList(realm, new ArrayList(), IObservable.classinfo);
+        targets = new WritableList(realm, new ArrayList(), typeid(IObservable));
         targets.addListChangeListener(targetsListener);
         unmodifiableTargets = Observables.unmodifiableObservableList(targets);
 
@@ -174,9 +178,9 @@ public abstract class MultiValidator : ValidationStatusProvider {
     }
 
     private void checkObservable(IObservable target) {
-        Assert.isNotNull(target, "Target observable cannot be null"); //$NON-NLS-1$
+        Assert.isNotNull(cast(Object)target, "Target observable cannot be null"); //$NON-NLS-1$
         Assert
-                .isTrue(realm.equals(target.getRealm()),
+                .isTrue(cast(bool)realm.opEquals(target.getRealm()),
                         "Target observable must be in the same realm as MultiValidator"); //$NON-NLS-1$
     }
 
@@ -205,11 +209,11 @@ public abstract class MultiValidator : ValidationStatusProvider {
                             IStatus status = validate();
                             if (status is null)
                                 status = ValidationStatus.ok();
-                            validationStatus.setValue(status);
+                            validationStatus.setValue(cast(Object)status);
                         } catch (RuntimeException e) {
                             // Usually an NPE as dependencies are
                             // init'ed
-                            validationStatus.setValue(ValidationStatus.error(e
+                            validationStatus.setValue(cast(Object)ValidationStatus.error(e
                                     .getMessage(), e));
                         }
                     }

@@ -34,36 +34,45 @@ public class Pair {
      * @param a a in the pair (a, b)
      * @param b b in the pair (a, b)
      */
+    public this(String a, String b) {
+        this(stringcast(a), stringcast(b));
+    }
+    public this(Object a, String b) {
+        this(a, stringcast(b));
+    }
+    public this(String a, Object b) {
+        this(stringcast(a), b);
+    }
     public this(Object a, Object b) {
         this.a = a;
         this.b = b;
     }
 
-    public int hashCode() {
+    public override hash_t toHash() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((a is null) ? 0 : a.hashCode());
-        result = prime * result + ((b is null) ? 0 : b.hashCode());
+        result = prime * result + ((a is null) ? 0 : a.toHash());
+        result = prime * result + ((b is null) ? 0 : b.toHash());
         return result;
     }
 
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (this is obj)
             return true;
         if (obj is null)
             return false;
-        if (getClass() !is obj.getClass())
+        if (this.classinfo !is obj.classinfo)
             return false;
         Pair other = cast(Pair) obj;
         if (a is null) {
             if (other.a !is null)
                 return false;
-        } else if (!a.equals(other.a))
+        } else if (!a.opEquals(other.a))
             return false;
         if (b is null) {
             if (other.b !is null)
                 return false;
-        } else if (!b.equals(other.b))
+        } else if (!b.opEquals(other.b))
             return false;
         return true;
     }

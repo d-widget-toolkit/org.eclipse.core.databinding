@@ -21,13 +21,17 @@ import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
  * @since 1.0
  */
 public class StringToShortValidator : AbstractStringToNumberValidator {
-    private static final Short MIN = new Shortcast(Short.MIN_VALUE);
-    private static final Short MAX = new Shortcast(Short.MAX_VALUE);
+    private static Short MIN;
+    private static Short MAX;
     
     /**
      * @param converter
      */
     public this(NumberFormatConverter converter) {
+        if( MIN is null || MAX is null ){
+            MIN = new Short(Short.MIN_VALUE);
+            MAX = new Short(Short.MAX_VALUE);
+        }
         super(converter, MIN, MAX);
     }
 

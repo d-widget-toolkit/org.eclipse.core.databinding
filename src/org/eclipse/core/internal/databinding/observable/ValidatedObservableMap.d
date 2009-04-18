@@ -48,7 +48,8 @@ public class ValidatedObservableMap : ObservableMap {
 
     private bool updatingTarget = false;
 
-    private IMapChangeListener targetChangeListener = new class() IMapChangeListener {
+    private IMapChangeListener targetChangeListener;
+    class TargetChangeListener : IMapChangeListener {
         public void handleMapChange(MapChangeEvent event) {
             if (updatingTarget)
                 return;
@@ -74,13 +75,15 @@ public class ValidatedObservableMap : ObservableMap {
         }
     };
 
-    private IStaleListener targetStaleListener = new class() IStaleListener {
+    private IStaleListener targetStaleListener;
+    class TargetStaleListener : IStaleListener {
         public void handleStale(StaleEvent staleEvent) {
             fireStale();
         }
     };
 
-    private IValueChangeListener validationStatusChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener validationStatusChangeListener;
+    class ValidationStatusChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             IStatus oldStatus = cast(IStatus) event.diff.getOldValue();
             IStatus newStatus = cast(IStatus) event.diff.getNewValue();
@@ -103,11 +106,14 @@ public class ValidatedObservableMap : ObservableMap {
      */
     public this(IObservableMap target,
             IObservableValue validationStatus) {
+targetStaleListener = new TargetStaleListener();
+targetChangeListener = new TargetChangeListener();
+validationStatusChangeListener = new ValidationStatusChangeListener();
         super(target.getRealm(), new HashMap(target));
-        Assert.isNotNull(validationStatus,
+        Assert.isNotNull(cast(Object)validationStatus,
                 "Validation status observable cannot be null"); //$NON-NLS-1$
         Assert
-                .isTrue(target.getRealm().equals(validationStatus.getRealm()),
+                .isTrue(cast(bool)target.getRealm().opEquals(validationStatus.getRealm()),
                         "Target and validation status observables must be on the same realm"); //$NON-NLS-1$
         this.target = target;
         this.validationStatus = validationStatus;

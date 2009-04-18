@@ -43,7 +43,8 @@ public class SetBinding : Binding {
     private bool updatingTarget;
     private bool updatingModel;
 
-    private ISetChangeListener targetChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener targetChangeListener;
+    class TargetChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             if (!updatingTarget) {
                 doUpdate(cast(IObservableSet) getTarget(),
@@ -53,7 +54,8 @@ public class SetBinding : Binding {
         }
     };
 
-    private ISetChangeListener modelChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener modelChangeListener;
+    class ModelChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             if (!updatingModel) {
                 doUpdate(cast(IObservableSet) getModel(),
@@ -72,6 +74,8 @@ public class SetBinding : Binding {
     public this(IObservableSet target, IObservableSet model,
             UpdateSetStrategy targetToModelStrategy,
             UpdateSetStrategy modelToTargetStrategy) {
+targetChangeListener = new TargetChangeListener();
+modelChangeListener = new ModelChangeListener();
         super(target, model);
         this.targetToModel = targetToModelStrategy;
         this.modelToTarget = modelToTargetStrategy;
@@ -93,7 +97,7 @@ public class SetBinding : Binding {
 
     protected void preInit() {
         validationStatusObservable = new WritableValue(context
-                .getValidationRealm(), Status.OK_STATUS, IStatus.classinfo);
+                .getValidationRealm(), cast(Object)Status.OK_STATUS, typeid(IStatus));
     }
 
     protected void postInit() {
@@ -165,7 +169,7 @@ public class SetBinding : Binding {
 
                 for (Iterator iterator = diff_.getRemovals().iterator(); iterator
                         .hasNext();) {
-                    IStatus setterStatus = updateSetStrategy_.doRemove(
+                    IStatus setterStatus = updateSetStrategy_.doRemove_package(
                             destination_, updateSetStrategy_.convert(iterator
                                     .next()));
 
@@ -177,7 +181,7 @@ public class SetBinding : Binding {
 
                 for (Iterator iterator = diff_.getAdditions().iterator(); iterator
                         .hasNext();) {
-                    IStatus setterStatus = updateSetStrategy_.doAdd(
+                    IStatus setterStatus = updateSetStrategy_.doAdd_package(
                             destination_, updateSetStrategy_.convert(iterator
                                     .next()));
 
@@ -195,7 +199,7 @@ public class SetBinding : Binding {
                     updatingModel = false;
                 }
             }
-        }, destination, diff, updateSetStrategy, clearDestination_));
+        }, destination, diff, updateSetStrategy, clearDestination));
     }
 
     /**

@@ -20,6 +20,13 @@ import java.lang.all;
  */
 public class Queue {
 
+    void notifyAll(){
+        implMissing( __FILE__, __LINE__ );
+    }
+    void wait(){
+        implMissing( __FILE__, __LINE__ );
+    }
+
     static class Entry {
         Object object;
 

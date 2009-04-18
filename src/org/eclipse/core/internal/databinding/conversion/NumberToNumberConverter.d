@@ -13,6 +13,7 @@ module org.eclipse.core.internal.databinding.conversion.NumberToNumberConverter;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.conversion.Converter;
 
@@ -34,10 +35,10 @@ public abstract class NumberToNumberConverter : Converter {
     private String outOfRangeMessage;
 
     protected this(NumberFormat numberFormat,
-            ClassInfo fromType, ClassInfo toType) {
+            TypeInfo fromType, TypeInfo toType) {
         super(fromType, toType);
         this.numberFormat = numberFormat;
-        this.primitive = toType.isPrimitive();
+        this.primitive = isJavaPrimitive(toType);
     }
 
     /*
@@ -45,7 +46,8 @@ public abstract class NumberToNumberConverter : Converter {
      * 
      * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
      */
-    public final Object convert(Object fromObject) {
+    // DWT not final, need to override to reimplement interface IConvert
+    public /+final+/ Object convert(Object fromObject) {
         if (fromObject is null) {
             if (primitive) {
                 throw new IllegalArgumentException(
@@ -70,8 +72,8 @@ public abstract class NumberToNumberConverter : Converter {
         synchronized (this) {
             if (outOfRangeMessage is null) {
                 outOfRangeMessage = StringToNumberParser
-                        .createOutOfRangeMessage(new Shortcast(Short.MIN_VALUE),
-                                new Shortcast(Short.MAX_VALUE), numberFormat);
+                        .createOutOfRangeMessage(new Short(Short.MIN_VALUE),
+                                new Short(Short.MAX_VALUE), numberFormat);
             }
 
             throw new IllegalArgumentException(outOfRangeMessage);

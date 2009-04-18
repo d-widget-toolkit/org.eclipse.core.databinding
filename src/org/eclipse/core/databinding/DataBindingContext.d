@@ -144,8 +144,8 @@ public class DataBindingContext {
                         : createTargetToModelUpdateValueStrategy(targetObservableValue, modelObservableValue);
         UpdateValueStrategy modelToTargetStrategy = modelToTarget !is null ? modelToTarget
                 : createModelToTargetUpdateValueStrategy(modelObservableValue, targetObservableValue);
-        targetToModelStrategy.fillDefaults(targetObservableValue, modelObservableValue);
-        modelToTargetStrategy.fillDefaults(modelObservableValue, targetObservableValue);
+        targetToModelStrategy.fillDefaults_package(targetObservableValue, modelObservableValue);
+        modelToTargetStrategy.fillDefaults_package(modelObservableValue, targetObservableValue);
         ValueBinding result = new ValueBinding(targetObservableValue,
                 modelObservableValue, targetToModelStrategy,
                 modelToTargetStrategy);
@@ -209,9 +209,9 @@ public class DataBindingContext {
         UpdateListStrategy modelToTargetStrategy = modelToTarget !is null ? modelToTarget
                 : createModelToTargetUpdateListStrategy(modelObservableList,
                         targetObservableList);
-        targetToModelStrategy.fillDefaults(targetObservableList,
+        targetToModelStrategy.fillDefaults_package(targetObservableList,
                 modelObservableList);
-        modelToTargetStrategy.fillDefaults(modelObservableList,
+        modelToTargetStrategy.fillDefaults_package(modelObservableList,
                 targetObservableList);
         ListBinding result = new ListBinding(targetObservableList,
                 modelObservableList, targetToModelStrategy,
@@ -271,8 +271,8 @@ public class DataBindingContext {
         if (modelToTarget is null)
             modelToTarget = createModelToTargetUpdateSetStrategy(
                     modelObservableSet, targetObservableSet);
-        targetToModel.fillDefaults(targetObservableSet, modelObservableSet);
-        modelToTarget.fillDefaults(modelObservableSet, targetObservableSet);
+        targetToModel.fillDefaults_package(targetObservableSet, modelObservableSet);
+        modelToTarget.fillDefaults_package(modelObservableSet, targetObservableSet);
         SetBinding result = new SetBinding(targetObservableSet,
                 modelObservableSet, targetToModel, modelToTarget);
         result.init(this);

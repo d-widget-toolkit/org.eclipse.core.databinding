@@ -13,8 +13,8 @@ module org.eclipse.core.internal.databinding.conversion.StringToShortConverter;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
-import org.eclipse.core.internal.databinding.conversion.StringToNumberParser.ParseResult;
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
 import com.ibm.icu.text.NumberFormat;
@@ -31,10 +31,10 @@ public class StringToShortConverter : NumberFormatConverter {
     /**
      * Constructs a new instance.
      */
-    private this(NumberFormat numberFormat, ClassInfo toType) {
-        super(String.classinfo, toType, numberFormat);
+    private this(NumberFormat numberFormat, TypeInfo toType) {
+        super(typeid(String), toType, numberFormat);
         this.numberFormat = numberFormat;
-        primitive = toType.isPrimitive();
+        primitive = isJavaPrimitive(toType);
     }
 
     /*
@@ -43,7 +43,7 @@ public class StringToShortConverter : NumberFormatConverter {
      * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object fromObject) {
-        ParseResult result = StringToNumberParser.parse(fromObject,
+        StringToNumberParser.ParseResult result = StringToNumberParser.parse(fromObject,
                 numberFormat, primitive);
 
         if (result.getPosition() !is null) {
@@ -51,7 +51,7 @@ public class StringToShortConverter : NumberFormatConverter {
             // it but anyone can call convert so we should return a properly
             // formatted message in an exception
             throw new IllegalArgumentException(StringToNumberParser
-                    .createParseErrorMessage(cast(String) fromObject, result
+                    .createParseErrorMessage(stringcast( fromObject), result
                             .getPosition()));
         } else if (result.getNumber() is null) {
             // if an error didn't occur and the number is null then it's a boxed
@@ -66,7 +66,7 @@ public class StringToShortConverter : NumberFormatConverter {
         synchronized (this) {
             if (outOfRangeMessage is null) {
                 outOfRangeMessage = StringToNumberParser
-                .createOutOfRangeMessage(new Shortcast(Short.MIN_VALUE), new Shortcast(Short.MAX_VALUE), numberFormat);
+                .createOutOfRangeMessage(new Short(Short.MIN_VALUE), new Short(Short.MAX_VALUE), numberFormat);
             }
                         
             throw new IllegalArgumentException(outOfRangeMessage);
@@ -90,6 +90,6 @@ public class StringToShortConverter : NumberFormatConverter {
     public static StringToShortConverter toShort(NumberFormat numberFormat,
             bool primitive) {
         return new StringToShortConverter(numberFormat,
-                (primitive) ? Short.TYPE : Short.classinfo);
+                (primitive) ? Short.TYPE : typeid(Short));
     }
 }

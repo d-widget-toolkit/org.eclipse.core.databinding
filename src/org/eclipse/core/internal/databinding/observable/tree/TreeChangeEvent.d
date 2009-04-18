@@ -37,7 +37,7 @@ public class TreeChangeEvent : EventObject {
      * @param diff
      */
     public this(IObservableTree source, TreeDiff diff) {
-        super(source);
+        super(cast(Object)source);
         this.diff = diff;
     }
 

@@ -42,9 +42,10 @@ public class ValidationStatusMap : ObservableMap {
 
     private final WritableList bindings;
 
-    private List dependencies = new ArrayList();
+    private List dependencies;
 
-    private IChangeListener markDirtyChangeListener = new class() IChangeListener {
+    private IChangeListener markDirtyChangeListener;
+    class MarkDirtyChangeListener : IChangeListener {
         public void handleChange(ChangeEvent event) {
             markDirty();
         }
@@ -55,6 +56,8 @@ public class ValidationStatusMap : ObservableMap {
      * @param bindings
      */
     public this(Realm realm, WritableList bindings) {
+markDirtyChangeListener = new MarkDirtyChangeListener();
+dependencies = new ArrayList();
         super(realm, new HashMap());
         this.bindings = bindings;
         bindings.addChangeListener(markDirtyChangeListener);
@@ -117,11 +120,11 @@ public class ValidationStatusMap : ObservableMap {
                 Binding binding = cast(Binding) it.next();
                 IObservableValue validationError = binding
                         .getValidationStatus();
-                dependencies.add(validationError);
+                dependencies.add(cast(Object)validationError);
                 validationError.addChangeListener(markDirtyChangeListener);
                 IStatus validationStatusValue = cast(IStatus) validationError
                         .getValue();
-                newContents.put(binding, validationStatusValue);
+                newContents.put(binding, cast(Object)validationStatusValue);
             }
             wrappedMap.putAll(newContents);
             isDirty = false;

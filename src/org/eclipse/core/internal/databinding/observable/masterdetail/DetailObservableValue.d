@@ -31,7 +31,8 @@ public class DetailObservableValue : AbstractObservableValue , IObserving {
 
     private bool updating = false;
 
-    private IValueChangeListener innerChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener innerChangeListener;
+    class InnerChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             if (!updating) {
                 fireValueChange(event.diff);
@@ -56,6 +57,8 @@ public class DetailObservableValue : AbstractObservableValue , IObserving {
      */
     public this(IObservableValue outerObservableValue,
             IObservableFactory factory, Object detailType) {
+innerChangeListener = new InnerChangeListener();
+outerChangeListener = new OuterChangeListener();
         super(outerObservableValue.getRealm());
         this.factory = factory;
         this.detailType = detailType;
@@ -65,7 +68,8 @@ public class DetailObservableValue : AbstractObservableValue , IObserving {
         outerObservableValue.addValueChangeListener(outerChangeListener);
     }
 
-    IValueChangeListener outerChangeListener = new class() IValueChangeListener {
+    IValueChangeListener outerChangeListener;
+    class OuterChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             Object oldValue = doGetValue();
             updateInnerObservableValue(outerObservableValue);
@@ -90,8 +94,8 @@ public class DetailObservableValue : AbstractObservableValue , IObserving {
             if (detailType !is null) {
                 Assert
                         .isTrue(
-                                detailType.equals(innerValueType),
-                                "Cannot change value type in a nested observable value, from " + innerValueType + " to " + detailType); //$NON-NLS-1$ //$NON-NLS-2$
+                                cast(bool)detailType.opEquals(innerValueType),
+                                Format("Cannot change value type in a nested observable value, from {} to {}", innerValueType, detailType)); //$NON-NLS-1$ //$NON-NLS-2$
             }
             innerObservableValue.addValueChangeListener(innerChangeListener);
         }

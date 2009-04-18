@@ -30,8 +30,31 @@ import org.eclipse.core.runtime.Assert;
  * Singleton empty set
  */
 public class EmptyObservableSet : IObservableSet {
+// DWT start: additional methods in Set
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+// DWT end: additional methods in Set
 
-    private static final Set emptySet = Collections.EMPTY_SET;
+    private static Set emptySet;
+    static this(){
+        emptySet = Collections.EMPTY_SET;
+    }
 
     private Realm realm;
     private Object elementType;
@@ -159,7 +182,7 @@ public class EmptyObservableSet : IObservableSet {
         return realm;
     }
 
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         checkRealm();
         if (obj is this)
             return true;
@@ -171,7 +194,7 @@ public class EmptyObservableSet : IObservableSet {
         return (cast(Set) obj).isEmpty();
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         checkRealm();
         return 0;
     }

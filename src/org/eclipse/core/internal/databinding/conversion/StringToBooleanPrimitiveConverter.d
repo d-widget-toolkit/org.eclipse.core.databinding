@@ -26,16 +26,16 @@ import org.eclipse.core.internal.databinding.BindingMessages;
  * StringToBooleanPrimitiveConverter.
  */
 public class StringToBooleanPrimitiveConverter : IConverter {
-    private static final String[] trueValues;
+    private static String[] trueValues;
 
-    private static final String[] falseValues;
+    private static String[] falseValues;
 
     static this(){
-        String delimiter = BindingMessages.getStringcast(BindingMessages.VALUE_DELIMITER);
-        String values = BindingMessages.getStringcast(BindingMessages.TRUE_STRING_VALUES);
+        String delimiter = BindingMessages.getString(BindingMessages.VALUE_DELIMITER);
+        String values = BindingMessages.getString(BindingMessages.TRUE_STRING_VALUES);
         trueValues = valuesToSortedArray(delimiter, values);
 
-        values = BindingMessages.getStringcast(BindingMessages.FALSE_STRING_VALUES);
+        values = BindingMessages.getString(BindingMessages.FALSE_STRING_VALUES);
         falseValues = valuesToSortedArray(delimiter, values);
     }
 
@@ -65,7 +65,7 @@ public class StringToBooleanPrimitiveConverter : IConverter {
      * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object source) {
-        String s = cast(String) source;
+        String s = stringcast( source);
         s = s.toUpperCase();
 
         if (Arrays.binarySearch(trueValues, s) > -1) {
@@ -80,7 +80,7 @@ public class StringToBooleanPrimitiveConverter : IConverter {
     }
 
     public Object getFromType() {
-        return String.classinfo;
+        return typeid(StringCls);
     }
 
     public Object getToType() {

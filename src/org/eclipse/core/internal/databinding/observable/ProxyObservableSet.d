@@ -36,13 +36,15 @@ public class ProxyObservableSet : AbstractObservableSet {
     private IObservableSet wrappedSet;
     private Object elementType;
 
-    private ISetChangeListener setChangeListener = new class() ISetChangeListener {
+    private ISetChangeListener setChangeListener;
+    class SetChangeListener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             fireSetChange(event.diff);
         }
     };
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent staleEvent) {
             fireStale();
         }
@@ -55,6 +57,8 @@ public class ProxyObservableSet : AbstractObservableSet {
      *            the set being wrapped
      */
     public this(IObservableSet wrappedSet) {
+setChangeListener = new SetChangeListener();
+staleListener = new StaleListener();
         super(wrappedSet.getRealm());
         this.wrappedSet = wrappedSet;
         this.elementType = wrappedSet.getElementType();

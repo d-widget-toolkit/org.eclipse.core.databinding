@@ -32,9 +32,12 @@ public class ValueChangingEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = 2305345286999701156L;
+    private static const long serialVersionUID = 2305345286999701156L;
 
-    static final Object TYPE = new Object();
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     /**
      * Description of the change to the source observable value. Listeners must

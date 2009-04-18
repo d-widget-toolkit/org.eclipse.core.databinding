@@ -44,7 +44,7 @@ public abstract class TreeDiffNode {
     /**
      * 
      */
-    public static final TreeDiffNode[] NO_CHILDREN = new TreeDiffNode[0];
+    public static final TreeDiffNode[] NO_CHILDREN;
 
     /**
      * 

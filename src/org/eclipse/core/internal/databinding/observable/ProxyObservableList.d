@@ -33,13 +33,15 @@ import org.eclipse.core.databinding.observable.list.ObservableList;
  * @since 1.1
  */
 public class ProxyObservableList : ObservableList {
-    private IListChangeListener listChangelistener = new class() IListChangeListener {
+    private IListChangeListener listChangelistener;
+    class ListChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             fireListChange(event.diff);
         }
     };
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent event) {
             fireStale();
         }
@@ -54,6 +56,8 @@ public class ProxyObservableList : ObservableList {
      *            the list being wrapped
      */
     public this(IObservableList wrappedList) {
+listChangelistener = new ListChangeListener();
+staleListener = new StaleListener();
         super(wrappedList.getRealm(), wrappedList, wrappedList.getElementType());
         this.wrappedList = wrappedList;
         wrappedList.addListChangeListener(listChangelistener);

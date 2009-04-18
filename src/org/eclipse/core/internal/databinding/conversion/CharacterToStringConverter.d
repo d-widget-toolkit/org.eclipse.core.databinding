@@ -25,7 +25,7 @@ public class CharacterToStringConverter : Converter {
      * @param primitive
      */
     private this(bool primitive) {
-        super(primitive ? Character.TYPE : Character.classinfo, String.classinfo);
+        super(primitive ? Character.TYPE : typeid(Character), typeid(StringCls));
         this.primitive = primitive;
     }
 
@@ -40,7 +40,7 @@ public class CharacterToStringConverter : Converter {
             if (primitive)
                 throw new IllegalArgumentException(
                         "'fromObject' is null. Cannot convert to primitive char."); //$NON-NLS-1$
-            return ""; //$NON-NLS-1$
+            return stringcast(""); //$NON-NLS-1$
         }
 
         if (!( null !is cast(Character)fromObject )) {
@@ -48,7 +48,7 @@ public class CharacterToStringConverter : Converter {
                     "'fromObject' is not of type [Character]."); //$NON-NLS-1$
         }
 
-        return String.valueOf((cast(Character) fromObject).charValue());
+        return stringcast(String_valueOf((cast(Character) fromObject).charValue()));
     }
 
     /**

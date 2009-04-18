@@ -32,8 +32,8 @@ public class NumberToBigDecimalConverter : NumberToNumberConverter {
      * @param numberFormat
      * @param fromType
      */
-    public this(NumberFormat numberFormat, ClassInfo fromType) {     
-        super(numberFormat, fromType, BigDecimal.classinfo);
+    public this(NumberFormat numberFormat, TypeInfo fromType) {     
+        super(numberFormat, fromType, typeid(BigDecimal));
     }
 
     /* (non-Javadoc)

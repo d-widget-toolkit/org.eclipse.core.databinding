@@ -165,13 +165,16 @@ public class UpdateListStrategy : UpdateStrategy {
         if (converter !is null) {
             if (sourceType !is null) {
                 checkAssignable(converter.getFromType(), sourceType,
-                        "converter does not convert from type " + sourceType); //$NON-NLS-1$
+                        "converter does not convert from type " ~ String_valueOf(sourceType)); //$NON-NLS-1$
             }
             if (destinationType !is null) {
                 checkAssignable(converter.getToType(), destinationType,
-                        "converter does not convert to type " + destinationType); //$NON-NLS-1$
+                        "converter does not convert to type " ~ String_valueOf(destinationType)); //$NON-NLS-1$
             }
         }
+    }
+    package void fillDefaults_package(IObservableList source, IObservableList destination) {
+        fillDefaults(source, destination );
     }
 
     /**
@@ -208,10 +211,13 @@ public class UpdateListStrategy : UpdateStrategy {
             observableList.add(index, element);
         } catch (Exception ex) {
             return ValidationStatus.error(BindingMessages
-                    .getStringcast(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
+                    .getString(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
                     ex);
         }
         return Status.OK_STATUS;
+    }
+    package IStatus doAdd_package(IObservableList observableList, Object element, int index) {
+        return doAdd(observableList, element, index );
     }
 
     /**
@@ -227,9 +233,12 @@ public class UpdateListStrategy : UpdateStrategy {
             observableList.remove(index);
         } catch (Exception ex) {
             return ValidationStatus.error(BindingMessages
-                    .getStringcast(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
+                    .getString(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
                     ex);
         }
         return Status.OK_STATUS;
+    }
+    package IStatus doRemove_package(IObservableList observableList, int index) {
+        return doRemove(observableList, index );
     }
 }

@@ -42,7 +42,7 @@ public class ReadOnlyValidator : IValidator {
     public IStatus validate(Object value) {
         // No changes are allowed
         return ValidationStatus.error(BindingMessages
-                .getStringcast(BindingMessages.VALIDATE_NO_CHANGE_ALLOWED_HELP));
+                .getString(BindingMessages.VALIDATE_NO_CHANGE_ALLOWED_HELP));
     }
 
 }

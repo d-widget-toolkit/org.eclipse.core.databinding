@@ -38,9 +38,10 @@ import org.eclipse.core.databinding.observable.Realm;
  */
 public class BidirectionalMap : ObservableMap {
 
-    private Map valueToElements = new HashMap();
+    private Map valueToElements;
 
-    private IMapChangeListener mapListener = new class() IMapChangeListener {
+    private IMapChangeListener mapListener;
+    class MapListener : IMapChangeListener {
 
         public void handleMapChange(MapChangeEvent event) {
             MapDiff diff = event.diff;
@@ -65,6 +66,8 @@ public class BidirectionalMap : ObservableMap {
      * @param wrappedMap
      */
     public this(IObservableMap wrappedMap) {
+valueToElements = new HashMap();
+mapListener = new MapListener();
         super(wrappedMap.getRealm(), wrappedMap);
         wrappedMap.addMapChangeListener(mapListener);
         for (Iterator it = wrappedMap.entrySet().iterator(); it.hasNext();) {

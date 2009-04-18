@@ -27,8 +27,11 @@ public class BindingMessages {
     /**
      * The Binding resource bundle; eagerly initialized.
      */
-    private static final ResourceBundle bundle = ResourceBundle
-            .getBundle("org.eclipse.core.internal.databinding.messages"); //$NON-NLS-1$
+    private static ResourceBundle bundle;
+    static this() {
+        bundle = ResourceBundle.getBundle(
+            getImportData!("org.eclipse.core.internal.databinding.messages.properties")); //$NON-NLS-1$
+    } 
 
     /**
      * Key to be used for an index out of range message.

@@ -39,7 +39,8 @@ import org.eclipse.core.databinding.observable.IObservableCollection;
  * @since 1.0
  */
 public interface IObservableList : List, IObservableCollection {
-    
+    alias List.add add;
+
     /**
      * Adds the given list change listener to the list of list change listeners.
      * @param listener
@@ -122,12 +123,12 @@ public interface IObservableList : List, IObservableCollection {
     /**
      * @TrackedGetter
      */
-    public bool opEquals(Object o);
+    public equals_t opEquals(Object o);
 
     /**
      * @TrackedGetter
      */
-    public int hashCode();
+    public hash_t toHash();
 
     /**
      * @TrackedGetter

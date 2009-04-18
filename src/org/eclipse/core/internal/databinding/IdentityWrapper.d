@@ -16,7 +16,7 @@ import java.lang.all;
 
 /**
  * Used for wrapping objects that define their own implementations of equals()
- * and hashCode() when putting them in sets or hashmaps to ensure identity
+ * and toHash() when putting them in sets or hashmaps to ensure identity
  * comparison.
  * 
  * @since 1.0
@@ -39,14 +39,14 @@ public class IdentityWrapper {
         return o;
     }
 
-    public override bool opEquals(Object obj) {
-        if (obj is null || obj.getClass() !is IdentityWrapper.classinfo) {
+    public override equals_t opEquals(Object obj) {
+        if (obj is null || obj.classinfo !is IdentityWrapper.classinfo) {
             return false;
         }
         return o is (cast(IdentityWrapper) obj).o;
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         return System.identityHashCode(o);
     }
 }

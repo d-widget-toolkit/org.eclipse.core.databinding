@@ -25,6 +25,8 @@ import java.lang.all;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.List;
 
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.ChangeSupport;
@@ -50,7 +52,42 @@ import org.eclipse.core.runtime.AssertionFailedException;
  */
 public abstract class AbstractObservableList : AbstractList ,
         IObservableList {
-
+    public Object set(int index, Object element){
+        return super.set( index, element );
+    }
+    public Object   remove(int index){
+        return super.remove(index);
+    }
+    public bool     remove(Object o){
+        return super.remove(o);
+    }
+    public bool     remove(String o){
+        return super.remove(o);
+    }
+    public void     add(int index, Object element){
+        return super.add(index, element);
+    }
+    public bool     add(Object o){
+        return super.add(o);
+    }
+    public bool     add(String o){
+        return super.add(o);
+    }
+    public ListIterator   listIterator(){
+        return super.listIterator();
+    }
+    public ListIterator   listIterator(int index){
+        return super.listIterator(index);
+    }
+    public void     clear(){
+        super.clear();
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        return super.opApply(dg);
+    }
+    public List   subList(int fromIndex, int toIndex){
+        return super.subList( fromIndex, toIndex );
+    }
     private ChangeSupport changeSupport;
 
     /**
@@ -60,6 +97,7 @@ public abstract class AbstractObservableList : AbstractList ,
     public this(Realm realm) {
         Assert.isNotNull(realm, "Realm cannot be null"); //$NON-NLS-1$
         changeSupport = new class(realm) ChangeSupport {
+            this(Realm r){super(r);}
             protected void firstListenerAdded() {
                 this.outer.firstListenerAdded();
             }
@@ -192,6 +230,7 @@ public abstract class AbstractObservableList : AbstractList ,
         };
     }
 
+
     public Object[] toArray() {
         getterCalled();
         return super.toArray();
@@ -202,9 +241,15 @@ public abstract class AbstractObservableList : AbstractList ,
         return super.toArray(a);
     }
 
+    public String[] toArray(String a[]) {
+        getterCalled();
+        return super.toArray(a);
+    }
+
     // Modification Operations
 
-    public bool add(Object o) {
+    public alias AbstractList.add add;
+    public override bool add(Object o) {
         getterCalled();
         return super.add(o);
     }
@@ -237,16 +282,17 @@ public abstract class AbstractObservableList : AbstractList ,
         int size = doGetSize();
         if (oldIndex < 0 || oldIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "oldIndex: " + oldIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("oldIndex: {}, size:{}", oldIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (newIndex < 0 || newIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "newIndex: " + newIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("newIndex: {}, size:{}", newIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         Object element = remove(oldIndex);
         add(newIndex, element);
         return element;
     }
 
-    public bool remove(Object o) {
+    public alias AbstractList.remove remove;
+    public override bool remove(Object o) {
         getterCalled();
         return super.remove(o);
     }
@@ -280,14 +326,14 @@ public abstract class AbstractObservableList : AbstractList ,
 
     // Comparison and hashing
 
-    public override bool opEquals(Object o) {
+    public override equals_t opEquals(Object o) {
         getterCalled();
-        return super.equals(o);
+        return super.opEquals(o);
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         getterCalled();
-        return super.hashCode();
+        return super.toHash();
     }
 
     public int indexOf(Object o) {

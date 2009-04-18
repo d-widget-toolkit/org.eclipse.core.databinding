@@ -68,10 +68,10 @@ import org.eclipse.core.runtime.Status;
  * <p>
  * The update phases are:
  * <ol>
- * <li>Validate after get - {@link #validateAfterGetcast(Object)}</li>
- * <li>Conversion - {@link #convertcast(Object)}</li>
- * <li>Validate after conversion - {@link #validateAfterConvertcast(Object)}</li>
- * <li>Validate before set - {@link #validateBeforeSetcast(Object)}</li>
+ * <li>Validate after get - {@link #validateAfterGet(Object)}</li>
+ * <li>Conversion - {@link #convert(Object)}</li>
+ * <li>Validate after conversion - {@link #validateAfterConvert(Object)}</li>
+ * <li>Validate before set - {@link #validateBeforeSet(Object)}</li>
  * <li>Value set - {@link #doSet(IObservableValue, Object)}</li>
  * </ol>
  * </p>
@@ -121,7 +121,7 @@ public class UpdateValueStrategy : UpdateStrategy {
     /**
      * Policy constant denoting that the source observable's state should be
      * tracked, including validating changes except for
-     * {@link #validateBeforeSetcast(Object)}, but that the destination
+     * {@link #validateBeforeSet(Object)}, but that the destination
      * observable's value should only be updated on request.
      */
     public static int POLICY_CONVERT = notInlined(4);
@@ -154,8 +154,12 @@ public class UpdateValueStrategy : UpdateStrategy {
 
     private int updatePolicy;
 
-    private static ValidatorRegistry validatorRegistry = new ValidatorRegistry();
-    private static HashMap validatorsByConverter = new HashMap();
+    private static ValidatorRegistry validatorRegistry;
+    private static HashMap validatorsByConverter;
+    static this(){
+        validatorRegistry = new ValidatorRegistry();
+        validatorsByConverter = new HashMap();
+    }
 
     protected bool provideDefaults;
 
@@ -210,7 +214,7 @@ public class UpdateValueStrategy : UpdateStrategy {
      * Converts the value from the source type to the destination type.
      * <p>
      * Default implementation will use the
-     * {@link #setConvertercast(IConverter) converter} if one exists. If no
+     * {@link #setConverter(IConverter) converter} if one exists. If no
      * converter exists no conversion occurs.
      * </p>
      *
@@ -248,7 +252,7 @@ public class UpdateValueStrategy : UpdateStrategy {
      * and <code>destination</code>. If the strategy is to default values it
      * will attempt to default a converter. If the converter can be defaulted an
      * attempt is made to default the
-     * {@link #validateAfterGetcast(Object) after get validator}. If a validator
+     * {@link #validateAfterGet(Object) after get validator}. If a validator
      * cannot be defaulted it will be <code>null</code>.
      *
      * @param source
@@ -273,13 +277,17 @@ public class UpdateValueStrategy : UpdateStrategy {
         if (converter !is null) {
             if (sourceType !is null) {
                 checkAssignable(converter.getFromType(), sourceType,
-                        "converter does not convert from type " + sourceType); //$NON-NLS-1$
+                        Format("converter does not convert from type {}", sourceType)); //$NON-NLS-1$
             }
             if (destinationType !is null) {
                 checkAssignable(converter.getToType(), destinationType,
-                        "converter does not convert to type " + destinationType); //$NON-NLS-1$
+                        Format("converter does not convert to type {}", destinationType)); //$NON-NLS-1$
             }
         }
+    }
+    package void fillDefaults_package(IObservableValue source,
+            IObservableValue destination) {
+        fillDefaults(source, destination );
     }
 
     private IValidator findValidator(Object fromType, Object toType) {
@@ -288,52 +296,52 @@ public class UpdateValueStrategy : UpdateStrategy {
         // We only default the validator if we defaulted the converter since the
         // two are tightly coupled.
         if (defaultedConverter) {
-            if (String.classinfo.equals(fromType)) {
-                result = cast(IValidator) validatorsByConverter.get(converter);
+            if (typeid(StringCls) is fromType) {
+                result = cast(IValidator) validatorsByConverter.get(cast(Object)converter);
 
                 if (result is null) {
                     // TODO sring based lookup
-                    if (Integer.classinfo.equals(toType)
-                            || Integer.TYPE.equals(toType)) {
+                    if (typeid(Integer).opEquals(toType)
+                            || Integer.TYPE.opEquals(toType)) {
                         result = new StringToIntegerValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Long.classinfo.equals(toType)
-                            || Long.TYPE.equals(toType)) {
+                    } else if (typeid(Long).opEquals(toType)
+                            || Long.TYPE.opEquals(toType)) {
                         result = new StringToLongValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Float.classinfo.equals(toType)
-                            || Float.TYPE.equals(toType)) {
+                    } else if (typeid(Float).opEquals(toType)
+                            || Float.TYPE.opEquals(toType)) {
                         result = new StringToFloatValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Double.classinfo.equals(toType)
-                            || Double.TYPE.equals(toType)) {
+                    } else if (typeid(Double).opEquals(toType)
+                            || Double.TYPE.opEquals(toType)) {
                         result = new StringToDoubleValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Byte.classinfo.equals(toType)
-                            || Byte.TYPE.equals(toType)) {
+                    } else if (typeid(Byte).opEquals(toType)
+                            || Byte.TYPE.opEquals(toType)) {
                         result = new StringToByteValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Short.classinfo.equals(toType)
-                            || Short.TYPE.equals(toType)) {
+                    } else if (typeid(Short).opEquals(toType)
+                            || Short.TYPE.opEquals(toType)) {
                         result = new StringToShortValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (Character.classinfo.equals(toType)
-                            || Character.TYPE.equals(toType)
+                    } else if (typeid(Character).opEquals(toType)
+                            || Character.TYPE.opEquals(toType)
                             && null !is cast(StringToCharacterConverter)converter ) {
                         result = new StringToCharacterValidator(
                                 cast(StringToCharacterConverter) converter);
-                    } else if (Date.classinfo.equals(toType)
+                    } else if (typeid(Date).opEquals(toType)
                             && null !is cast(StringToDateConverter)converter ) {
                         result = new StringToDateValidator(
                                 cast(StringToDateConverter) converter);
                     }
 
                     if (result !is null) {
-                        validatorsByConverter.put(converter, result);
+                        validatorsByConverter.put(cast(Object)converter, cast(Object)result);
                     }
                 }
             } else if ( null !is cast(NumberToNumberConverter)converter ) {
-                result = cast(IValidator) validatorsByConverter.get(converter);
+                result = cast(IValidator) validatorsByConverter.get(cast(Object)converter);
 
                 if (result is null) {
                     if ( null !is cast(NumberToByteConverter)converter ) {
@@ -430,7 +438,7 @@ public class UpdateValueStrategy : UpdateStrategy {
      * Validates the value after it is converted.
      * <p>
      * Default implementation will use the
-     * {@link #setAfterConvertValidatorcast(IValidator) validator} if one exists. If
+     * {@link #setAfterConvertValidator(IValidator) validator} if one exists. If
      * one does not exist no validation will occur.
      * </p>
      *
@@ -446,7 +454,7 @@ public class UpdateValueStrategy : UpdateStrategy {
      * Validates the value after it is retrieved from the source.
      * <p>
      * Default implementation will use the
-     * {@link #setAfterGetValidatorcast(IValidator) validator} if one exists. If one
+     * {@link #setAfterGetValidator(IValidator) validator} if one exists. If one
      * does not exist no validation will occur.
      * </p>
      *
@@ -462,7 +470,7 @@ public class UpdateValueStrategy : UpdateStrategy {
      * Validates the value before it is set on the destination.
      * <p>
      * Default implementation will use the
-     * {@link #setBeforeSetValidatorcast(IValidator) validator} if one exists. If
+     * {@link #setBeforeSetValidator(IValidator) validator} if one exists. If
      * one does not exist no validation will occur.
      * </p>
      *
@@ -487,15 +495,18 @@ public class UpdateValueStrategy : UpdateStrategy {
             observableValue.setValue(value);
         } catch (Exception ex) {
             return ValidationStatus.error(BindingMessages
-                    .getStringcast(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
+                    .getString(BindingMessages.VALUEBINDING_ERROR_WHILE_SETTING_VALUE),
                     ex);
         }
         return Status.OK_STATUS;
     }
+    package IStatus doSet_package(IObservableValue observableValue, Object value) {
+        return doSet(observableValue,value);
+    }
 
     private static class ValidatorRegistry {
 
-        private HashMap validators = new HashMap();
+        private HashMap validators;
 
         /**
          * Adds the system-provided validators to the current validator
@@ -503,36 +514,37 @@ public class UpdateValueStrategy : UpdateStrategy {
          * singleton.
          */
         private this() {
+validators = new HashMap();
             // Standalone validators here...
-            associate(Integer.classinfo, Integer.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Integer.TYPE));
-            associate(Byte.classinfo, Byte.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Integer), Integer.TYPE,
+                    new ObjectToPrimitiveValidator(Integer.TYPE));
+            associate(typeid(Byte), Byte.TYPE, new ObjectToPrimitiveValidator(
                     Byte.TYPE));
-            associate(Short.classinfo, Short.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Short), Short.TYPE, new ObjectToPrimitiveValidator(
                     Short.TYPE));
-            associate(Long.classinfo, Long.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Long), Long.TYPE, new ObjectToPrimitiveValidator(
                     Long.TYPE));
-            associate(Float.classinfo, Float.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Float), Float.TYPE, new ObjectToPrimitiveValidator(
                     Float.TYPE));
-            associate(Double.classinfo, Double.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Double.TYPE));
-            associate(Boolean.classinfo, Boolean.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Boolean.TYPE));
+            associate(typeid(Double), Double.TYPE,
+                    new ObjectToPrimitiveValidator(Double.TYPE));
+            associate(typeid(Boolean), Boolean.TYPE,
+                    new ObjectToPrimitiveValidator(Boolean.TYPE));
 
-            associate(Object.classinfo, Integer.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Integer.TYPE));
-            associate(Object.classinfo, Byte.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Object), Integer.TYPE,
+                    new ObjectToPrimitiveValidator(Integer.TYPE));
+            associate(typeid(Object), Byte.TYPE, new ObjectToPrimitiveValidator(
                     Byte.TYPE));
-            associate(Object.classinfo, Short.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Object), Short.TYPE, new ObjectToPrimitiveValidator(
                     Short.TYPE));
-            associate(Object.classinfo, Long.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Object), Long.TYPE, new ObjectToPrimitiveValidator(
                     Long.TYPE));
-            associate(Object.classinfo, Float.TYPE, new ObjectToPrimitiveValidator(
+            associate(typeid(Object), Float.TYPE, new ObjectToPrimitiveValidator(
                     Float.TYPE));
-            associate(Object.classinfo, Double.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Double.TYPE));
-            associate(Object.classinfo, Boolean.TYPE,
-                    new ObjectToPrimitiveValidatorcast(Boolean.TYPE));
+            associate(typeid(Object), Double.TYPE,
+                    new ObjectToPrimitiveValidator(Double.TYPE));
+            associate(typeid(Object), Boolean.TYPE,
+                    new ObjectToPrimitiveValidator(Boolean.TYPE));
         }
 
         /**
@@ -548,7 +560,7 @@ public class UpdateValueStrategy : UpdateStrategy {
          */
         private void associate(Object fromClass, Object toClass,
                 IValidator validator) {
-            validators.put(new Pair(fromClass, toClass), validator);
+            validators.put(new Pair(fromClass, toClass), cast(Object)validator);
         }
 
         /**

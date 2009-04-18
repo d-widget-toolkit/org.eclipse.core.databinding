@@ -45,9 +45,12 @@ public class StaleEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = 3491012225431471077L;
+    private static const long serialVersionUID = 3491012225431471077L;
 
-    static final Object TYPE = new Object();
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     protected void dispatch(IObservablesListener listener) {
         (cast(IStaleListener) listener).handleStale(this);

@@ -28,15 +28,15 @@ import org.eclipse.core.databinding.conversion.IConverter;
 public class DateToStringConverter : DateConversionSupport , IConverter {    
     public Object convert(Object source) {
         if (source !is null)
-            return format(cast(Date)source);
-        return ""; //$NON-NLS-1$
+            return stringcast(format(cast(Date)source));
+        return stringcast(""); //$NON-NLS-1$
     }
 
     public Object getFromType() {
-        return Date.classinfo;
+        return typeid(Date);
     }
 
     public Object getToType() {
-        return String.classinfo;
+        return typeid(StringCls);
     }   
 }

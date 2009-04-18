@@ -79,6 +79,7 @@ public abstract class ComputedValue : AbstractObservableValue {
      * @param valueType
      */
     public this(Realm realm, Object valueType) {
+privateInterface = new PrivateInterface();
         super(realm);
         this.valueType = valueType;
     }
@@ -122,7 +123,7 @@ public abstract class ComputedValue : AbstractObservableValue {
         }
     }
 
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
 
     private Object valueType;
 

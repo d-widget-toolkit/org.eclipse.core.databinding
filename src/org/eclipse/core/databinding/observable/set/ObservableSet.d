@@ -41,7 +41,27 @@ import org.eclipse.core.databinding.observable.Realm;
  */
 public abstract class ObservableSet : AbstractObservable ,
         IObservableSet {
+// DWT start: additional methods in Set
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
 
+// DWT end: additional methods in Set
     protected Set wrappedSet;
 
     private bool stale = false;
@@ -83,14 +103,14 @@ public abstract class ObservableSet : AbstractObservable ,
         return wrappedSet.containsAll(c);
     }
 
-    public override bool opEquals(Object o) {
+    public override equals_t opEquals(Object o) {
         getterCalled();
-        return wrappedSet.equals(o);
+        return wrappedSet.opEquals(o);
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         getterCalled();
-        return wrappedSet.hashCode();
+        return wrappedSet.toHash();
     }
 
     public bool isEmpty() {

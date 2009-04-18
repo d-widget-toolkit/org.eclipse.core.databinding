@@ -40,14 +40,16 @@ class ValueBinding : Binding {
 
     private bool updatingTarget;
     private bool updatingModel;
-    private IValueChangeListener targetChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener targetChangeListener;
+    class TargetChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             if (!updatingTarget && !Util.equals(event.diff.getOldValue(), event.diff.getNewValue())) {
                 doUpdate(target, model, targetToModel, false, false);
             }
         }
     };
-    private IValueChangeListener modelChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener modelChangeListener;
+    class ModelChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             if (!updatingModel && !Util.equals(event.diff.getOldValue(), event.diff.getNewValue())) {
                 doUpdate(model, target, modelToTarget, false, false);
@@ -64,6 +66,8 @@ class ValueBinding : Binding {
     public this(IObservableValue targetObservableValue,
             IObservableValue modelObservableValue,
             UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+targetChangeListener = new TargetChangeListener();
+modelChangeListener = new ModelChangeListener();
         super(targetObservableValue, modelObservableValue);
         this.target = targetObservableValue;
         this.model = modelObservableValue;
@@ -83,7 +87,7 @@ class ValueBinding : Binding {
 
     protected void preInit() {
         validationStatusObservable = new WritableValue(context
-                .getValidationRealm(), Status.OK_STATUS, IStatus.classinfo);
+                .getValidationRealm(), cast(Object) Status.OK_STATUS, typeid(IStatus));
     }
 
     protected void postInit() {
@@ -189,7 +193,7 @@ class ValueBinding : Binding {
                     }
                     try {
                         IStatus setterStatus = updateValueStrategy__
-                                .doSet(destination__, convertedValue);
+                                .doSet_package(destination__, convertedValue);
 
                         mergeStatus(multiStatus, setterStatus);
                     } finally {
@@ -204,8 +208,8 @@ class ValueBinding : Binding {
             } catch (Exception ex) {
                 // This check is necessary as in 3.2.2 Status
                 // doesn't accept a null message (bug 177264).
-                String message = (ex.getMessage() !is null) ? ex
-                        .getMessage() : ""; //$NON-NLS-1$
+                String message = (ex.msg !is null) ? ex
+                        .msg : ""; //$NON-NLS-1$
 
                 mergeStatus(multiStatus, new Status(IStatus.ERROR,
                         Policy.JFACE_DATABINDING, IStatus.ERROR, message,
@@ -229,7 +233,7 @@ class ValueBinding : Binding {
 
     private void setValidationStatus( IStatus status) {
         validationStatusObservable.getRealm().exec(dgRunnable((IStatus status_) {
-            validationStatusObservable.setValue(status_);
+            validationStatusObservable.setValue(cast(Object)status_);
         }, status));
     }
     

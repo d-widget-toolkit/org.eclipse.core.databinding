@@ -31,8 +31,11 @@ public class MapChangeEvent : ObservableEvent {
     /**
      * 
      */
-    private static final long serialVersionUID = -8092347212410548463L;
-    static final Object TYPE = new Object();
+    private static const long serialVersionUID = -8092347212410548463L;
+    static const Object TYPE;
+    static this(){
+        TYPE = new Object();
+    }
 
     /**
      * Description of the change to the source observable map. Listeners must

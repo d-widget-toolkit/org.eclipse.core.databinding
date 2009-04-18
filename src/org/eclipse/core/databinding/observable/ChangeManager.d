@@ -67,7 +67,7 @@ import org.eclipse.core.runtime.ListenerList;
             listenerTypes[length] = listenerType;
             listenerLists[length] = new ListenerList();
             bool hadListeners = hasListeners();
-            listenerLists[length].add(listener);
+            listenerLists[length].add(cast(Object)listener);
             if (!hadListeners) {
                 this.firstListenerAdded();
             }
@@ -78,7 +78,7 @@ import org.eclipse.core.runtime.ListenerList;
         if (listenerList.size() is 0) {
             hadListeners = hasListeners();
         }
-        listenerList.add(listener);
+        listenerList.add(cast(Object)listener);
         if (!hadListeners) {
             firstListenerAdded();
         }
@@ -92,7 +92,7 @@ import org.eclipse.core.runtime.ListenerList;
             IObservablesListener listener) {
         int listenerTypeIndex = findListenerTypeIndex(listenerType);
         if (listenerTypeIndex !is -1) {
-            listenerLists[listenerTypeIndex].remove(listener);
+            listenerLists[listenerTypeIndex].remove(cast(Object)listener);
             if (listenerLists[listenerTypeIndex].size() is 0) {
                 if (!hasListeners()) {
                     this.lastListenerRemoved();
@@ -125,13 +125,13 @@ import org.eclipse.core.runtime.ListenerList;
     }
 
     protected void fireEvent(ObservableEvent event) {
-        Object listenerType = event.getListenerType();
+        Object listenerType = event.getListenerType_package();
         int listenerTypeIndex = findListenerTypeIndex(listenerType);
         if (listenerTypeIndex !is -1) {
             Object[] listeners = listenerLists[listenerTypeIndex]
                     .getListeners();
             for (int i = 0; i < listeners.length; i++) {
-                event.dispatch(cast(IObservablesListener) listeners[i]);
+                event.dispatch_package(cast(IObservablesListener) listeners[i]);
             }
         }
     }

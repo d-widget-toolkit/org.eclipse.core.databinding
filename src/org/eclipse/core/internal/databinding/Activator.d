@@ -44,7 +44,7 @@ public class Activator : BundleActivator {
     }
 
     public void start(BundleContext context) {
-        _frameworkLogTracker = new ServiceTracker(context, FrameworkLog.classinfo.getName(), null);
+        _frameworkLogTracker = new ServiceTracker(context, FrameworkLog.classinfo.name, null);
         _frameworkLogTracker.open();
 
         Policy.setLog(new class() ILogger {
@@ -56,9 +56,9 @@ public class Activator : BundleActivator {
                     log.log(createLogEntry(status));
                 } else {
                     // fall back to System.err
-                    System.err.println(status.getPlugin() + " - " + status.getCode() + " - " + status.getMessage());  //$NON-NLS-1$//$NON-NLS-2$
+                    getDwtLogger().error(__FILE__, __LINE__, "{} - {} - {}", status.getPlugin(), status.getCode(), status.getMessage());  //$NON-NLS-1$//$NON-NLS-2$
                     if( status.getException() !is null ) {
-                        status.getException().printStackTrace(System.err);
+                        ExceptionPrintStackTrace(status.getException());
                     }
                 }
             }

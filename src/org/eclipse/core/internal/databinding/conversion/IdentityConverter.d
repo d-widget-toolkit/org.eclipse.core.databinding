@@ -13,6 +13,7 @@
 module org.eclipse.core.internal.databinding.conversion.IdentityConverter;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.BindingException;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -22,33 +23,39 @@ import org.eclipse.core.databinding.conversion.IConverter;
  */
 public class IdentityConverter : IConverter {
 
-    private ClassInfo fromType;
+    private TypeInfo fromType;
 
-    private ClassInfo toType;
+    private TypeInfo toType;
 
     /**
      * @param type
      */
-    public this(ClassInfo type) {
+    public this(TypeInfo type) {
         this.fromType = type;
         this.toType = type;
+        initPrimitiveMap();
     }
 
     /**
      * @param fromType
      * @param toType
      */
-    public this(ClassInfo fromType, ClassInfo toType) {
+    public this(TypeInfo fromType, TypeInfo toType) {
         this.fromType = fromType;
         this.toType = toType;
+        initPrimitiveMap();
     }
 
-    private ClassInfo[][] primitiveMap = new ClassInfo[][] [
-            [ Integer.TYPE, Integer.classinfo ], [ Short.TYPE, Short.classinfo ],
-            [ Long.TYPE, Long.classinfo ], [ Double.TYPE, Double.classinfo ],
-            [ Byte.TYPE, Byte.classinfo ], [ Float.TYPE, Float.classinfo ],
-            [ Boolean.TYPE, Boolean.classinfo ],
-            [ Character.TYPE, Character.classinfo ] ];
+    private TypeInfo[][] primitiveMap;
+
+    private void initPrimitiveMap(){
+        primitiveMap = [
+            [ cast(TypeInfo)Integer.TYPE, typeid(Integer) ], [ cast(TypeInfo)Short.TYPE, typeid(Short) ],
+            [ cast(TypeInfo)Long.TYPE, typeid(Long) ], [ cast(TypeInfo)Double.TYPE, typeid(Double) ],
+            [ cast(TypeInfo)Byte.TYPE, typeid(Byte) ], [ cast(TypeInfo)Float.TYPE, typeid(Float) ],
+            [ cast(TypeInfo)Boolean.TYPE, typeid(Boolean) ],
+            [ cast(TypeInfo)Character.TYPE, typeid(Character) ] ];
+    }
 
     /*
      * (non-Javadoc)
@@ -56,24 +63,24 @@ public class IdentityConverter : IConverter {
      * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object source) {
-        if (toType.isPrimitive()) {
+        if ( isJavaPrimitive(toType)) {
             if (source is null) {
                 throw new BindingException("Cannot convert null to a primitive"); //$NON-NLS-1$
             }
         }
         if (source !is null) {
-            ClassInfo sourceClass = source.getClass();
-            if (toType.isPrimitive() || sourceClass.isPrimitive()) {
-                if (sourceClass.equals(toType)
+            TypeInfo sourceClass = getTypeInfo(source.classinfo);
+            if (isJavaPrimitive(toType) || isJavaPrimitive(sourceClass)) {
+                if (sourceClass.opEquals(toType)
                         || isPrimitiveTypeMatchedWithBoxed(sourceClass, toType)) {
                     return source;
                 }
                 throw new BindingException(
                         "Boxed and unboxed types do not match"); //$NON-NLS-1$
             }
-            if (!toType.isAssignableFrom(sourceClass)) {
-                throw new BindingException(sourceClass.getName()
-                        + " is not assignable to " + toType.getName()); //$NON-NLS-1$
+            if (!isImplicitly(sourceClass, toType)) {
+                throw new BindingException(asClass(sourceClass).name
+                        ~ " is not assignable to " ~ asClass(toType).name); //$NON-NLS-1$
             }
         }
         return source;
@@ -86,15 +93,15 @@ public class IdentityConverter : IConverter {
      * @param toClass
      * @return true if sourceClass and toType are matched primitive/boxed types
      */
-    public bool isPrimitiveTypeMatchedWithBoxed(ClassInfo sourceClass,
-            ClassInfo toClass) {
+    public bool isPrimitiveTypeMatchedWithBoxed(TypeInfo sourceClass,
+            TypeInfo toClass) {
         for (int i = 0; i < primitiveMap.length; i++) {
-            if (toClass.equals(primitiveMap[i][0])
-                    && sourceClass.equals(primitiveMap[i][1])) {
+            if (toClass.opEquals(primitiveMap[i][0])
+                    && sourceClass.opEquals(primitiveMap[i][1])) {
                 return true;
             }
-            if (sourceClass.equals(primitiveMap[i][0])
-                    && toClass.equals(primitiveMap[i][1])) {
+            if (sourceClass.opEquals(primitiveMap[i][0])
+                    && toClass.opEquals(primitiveMap[i][1])) {
                 return true;
             }
         }

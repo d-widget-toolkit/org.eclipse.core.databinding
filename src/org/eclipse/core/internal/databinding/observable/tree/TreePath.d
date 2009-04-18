@@ -30,7 +30,10 @@ public final class TreePath {
     /**
      * Constant for representing an empty tree path.
      */
-    public static final TreePath EMPTY = new TreePath(new Object[0]);
+    public static TreePath EMPTY;
+    static this(){
+        EMPTY = new TreePath(new Object[0]);
+    }
     
     private Object[] segments;
 
@@ -44,7 +47,7 @@ public final class TreePath {
      *            root element
      */
     public this(Object[] segments) {
-        Assert.isNotNull(segments, "Segments array cannot be null"); //$NON-NLS-1$
+        Assert.isTrue(segments !is null, "Segments array cannot be null"); //$NON-NLS-1$
         this.segments = new Object[segments.length];
         for (int i = 0; i < segments.length; i++) {
             Assert.isNotNull(segments[i], "Segments array cannot contain null"); //$NON-NLS-1$
@@ -101,7 +104,7 @@ public final class TreePath {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public override bool opEquals(Object other) {
+    public override equals_t opEquals(Object other) {
         if (!( null !is cast(TreePath)other )) {
             return false;
         }
@@ -110,17 +113,17 @@ public final class TreePath {
             return false;
         }
         for (int i = 0; i < segments.length; i++) {
-                if (!segments[i].equals(otherPath.segments[i])) {
+                if (!segments[i].opEquals(otherPath.segments[i])) {
                     return false;
                 }
         }
         return true;
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         if (hash is 0) {
             for (int i = 0; i < segments.length; i++) {
-                    hash += segments[i].hashCode();
+                    hash += segments[i].toHash();
             }
         }
         return hash;
@@ -139,14 +142,14 @@ public final class TreePath {
         int thisSegmentCount = getSegmentCount();
         int otherSegmentCount = treePath.getSegmentCount();
         if (otherSegmentCount is thisSegmentCount) {
-            return equals(treePath);
+            return cast(bool)opEquals(treePath);
         }
         if (otherSegmentCount > thisSegmentCount) {
             return false;
         }
         for (int i = 0; i < otherSegmentCount; i++) {
             Object otherSegment = treePath.getSegment(i);
-                if (!otherSegment.equals(segments[i])) {
+                if (!otherSegment.opEquals(segments[i])) {
                     return false;
                 }
         }

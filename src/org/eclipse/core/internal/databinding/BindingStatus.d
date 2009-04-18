@@ -72,31 +72,32 @@ public class BindingStatus : MultiStatus {
         return new BindingStatus(Policy.JFACE_DATABINDING, 0, "", null); //$NON-NLS-1$
     }
     
-    private static int hashCode(Object[] array) {
+    private static hash_t toHash(IStatus[] array) {
         final int prime = 31;
         if (array is null)
             return 0;
         int result = 1;
         for (int index = 0; index < array.length; index++) {
+            auto obj = cast(Object)array[index];
             result = prime * result
-                    + (array[index] is null ? 0 : array[index].hashCode());
+                    + (obj is null ? 0 : obj.toHash());
         }
         return result;
     }
     
-    public int hashCode() {
+    public hash_t toHash() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + BindingStatus.hashCode(getChildren());
+        result = prime * result + BindingStatus.toHash(getChildren());
         return result;
     }
 
-    public override bool opEquals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (this is obj)
             return true;
         if (obj is null)
             return false;
-        if (getClass() !is obj.getClass())
+        if (this.classinfo !is obj.classinfo)
             return false;
         final BindingStatus other = cast(BindingStatus) obj;
         if (!Arrays.equals(getChildren(), other.getChildren()))

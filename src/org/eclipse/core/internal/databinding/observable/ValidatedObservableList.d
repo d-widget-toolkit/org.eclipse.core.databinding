@@ -53,7 +53,8 @@ public class ValidatedObservableList : ObservableList {
 
     private bool updatingTarget = false;
 
-    private IListChangeListener targetChangeListener = new class() IListChangeListener {
+    private IListChangeListener targetChangeListener;
+    class TargetChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             if (updatingTarget)
                 return;
@@ -83,13 +84,15 @@ public class ValidatedObservableList : ObservableList {
         return status.isOK() || status.matches(IStatus.INFO | IStatus.WARNING);
     }
 
-    private IStaleListener targetStaleListener = new class() IStaleListener {
+    private IStaleListener targetStaleListener;
+    class TargetStaleListener : IStaleListener {
         public void handleStale(StaleEvent staleEvent) {
             fireStale();
         }
     };
 
-    private IValueChangeListener validationStatusChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener validationStatusChangeListener;
+    class ValidationStatusChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             IStatus oldStatus = cast(IStatus) event.diff.getOldValue();
             IStatus newStatus = cast(IStatus) event.diff.getNewValue();
@@ -112,11 +115,14 @@ public class ValidatedObservableList : ObservableList {
      */
     public this(IObservableList target,
             IObservableValue validationStatus) {
+targetStaleListener = new TargetStaleListener();
+targetChangeListener = new TargetChangeListener();
+validationStatusChangeListener = new ValidationStatusChangeListener();
         super(target.getRealm(), new ArrayList(target), target.getElementType());
-        Assert.isNotNull(validationStatus,
+        Assert.isNotNull(cast(Object)validationStatus,
                 "Validation status observable cannot be null"); //$NON-NLS-1$
         Assert
-                .isTrue(target.getRealm().equals(validationStatus.getRealm()),
+                .isTrue(cast(bool)target.getRealm().opEquals(validationStatus.getRealm()),
                         "Target and validation status observables must be on the same realm"); //$NON-NLS-1$
         this.target = target;
         this.validationStatus = validationStatus;
@@ -252,6 +258,9 @@ public class ValidatedObservableList : ObservableList {
             int lastIndex = -1;
             Object last = null;
 
+            public void add(String o) {
+                add(stringcast(o));
+            }
             public void add(Object o) {
                 wrappedIterator.add(o);
                 lastIndex = previousIndex();
@@ -315,10 +324,10 @@ public class ValidatedObservableList : ObservableList {
         int size = wrappedList.size();
         if (oldIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "oldIndex: " + oldIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("oldIndex: {}, size:{}", oldIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (newIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "newIndex: " + newIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("newIndex: {}, size:{}", newIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (oldIndex is newIndex)
             return wrappedList.get(oldIndex);
         Object element = wrappedList.remove(oldIndex);

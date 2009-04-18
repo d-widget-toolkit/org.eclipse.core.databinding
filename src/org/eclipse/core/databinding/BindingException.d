@@ -49,18 +49,20 @@ public class BindingException : RuntimeException {
     }
 
     public void printStackTrace(PrintStream err) {
-        super.printStackTrace(err);
-        if (cause !is null) {
-            err.println("caused by:"); //$NON-NLS-1$
-            cause.printStackTrace(err);
-        }
+        implMissing( __FILE__, __LINE__ );
+        //ExceptionPrintStackTrace( this, err );
+        //if (cause !is null) {
+        //    err.println("caused by:"); //$NON-NLS-1$
+        //    ExceptionPrintStackTrace( cause, err );
+        //}
     }
 
     public void printStackTrace(PrintWriter err) {
-        super.printStackTrace(err);
-        if (cause !is null) {
-            err.println("caused by:"); //$NON-NLS-1$
-            cause.printStackTrace(err);
-        }
+        implMissing( __FILE__, __LINE__ );
+        //ExceptionPrintStackTrace( this, err );
+        //if (cause !is null) {
+        //    err.println("caused by:"); //$NON-NLS-1$
+        //    ExceptionPrintStackTrace( cause, err );
+        //}
     }
 }

@@ -46,6 +46,38 @@ import org.eclipse.core.databinding.observable.Realm;
 public abstract class ObservableList : AbstractObservable ,
         IObservableList {
 
+// DWT start: additional methods in List
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    public String[] toArray( String[] a ){
+        auto d = toArray();
+        if( a.length < d.length ){
+            a.length = d.length;
+        }
+        for( int i = 0; i < d.length; i++ ){
+            a[i] = stringcast(d[i]);
+        }
+        return a;
+    }
+// DWT end: additional methods in List
+// DWT start: reimpl
+// DWT end: reimpl
     protected List wrappedList;
 
     /**
@@ -89,14 +121,14 @@ public abstract class ObservableList : AbstractObservable ,
         return wrappedList.containsAll(c);
     }
 
-    public override bool opEquals(Object o) {
+    public override equals_t opEquals(Object o) {
         getterCalled();
-        return wrappedList.equals(o);
+        return wrappedList.opEquals(o);
     }
 
-    public int hashCode() {
+    public hash_t toHash() {
         getterCalled();
-        return wrappedList.hashCode();
+        return wrappedList.toHash();
     }
 
     public bool isEmpty() {
@@ -212,6 +244,9 @@ public abstract class ObservableList : AbstractObservable ,
                 return wrappedIterator.previous();
             }
 
+            public void add(String o) {
+                throw new UnsupportedOperationException();
+            }
             public void add(Object o) {
                 throw new UnsupportedOperationException();
             }
@@ -232,7 +267,7 @@ public abstract class ObservableList : AbstractObservable ,
             int fromIndex_; int toIndex_;
             this( Realm r, int f, int t){
                 super(r);
-                fromIndex_ = r;
+                fromIndex_ = f;
                 toIndex_ = t;
             }
         
@@ -286,10 +321,10 @@ public abstract class ObservableList : AbstractObservable ,
         int size = wrappedList.size();
         if (oldIndex < 0 || oldIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "oldIndex: " + oldIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("oldIndex: {}, size:{}", oldIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (newIndex < 0 || newIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "newIndex: " + newIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("newIndex: {}, size:{}", newIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         Object element = remove(oldIndex);
         add(newIndex, element);
         return element;

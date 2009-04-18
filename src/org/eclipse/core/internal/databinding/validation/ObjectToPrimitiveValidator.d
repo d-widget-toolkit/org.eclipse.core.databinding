@@ -13,6 +13,7 @@
 module org.eclipse.core.internal.databinding.validation.ObjectToPrimitiveValidator;
 
 import java.lang.all;
+import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -26,23 +27,26 @@ import org.eclipse.core.runtime.Status;
  */
 public class ObjectToPrimitiveValidator : IValidator {
 
-    private ClassInfo toType;
+    private TypeInfo toType;
 
-    private ClassInfo[][] primitiveMap = new ClassInfo[][] [
-            [ Integer.TYPE, Integer.classinfo ], [ Short.TYPE, Short.classinfo ],
-            [ Long.TYPE, Long.classinfo ], [ Double.TYPE, Double.classinfo ],
-            [ Byte.TYPE, Byte.classinfo ], [ Float.TYPE, Float.classinfo ],
-            [ Boolean.TYPE, Boolean.classinfo ],
-            [ Character.TYPE, Character.classinfo ] ];
+    private static TypeInfo[][] primitiveMap;
+    static this(){
+        primitiveMap = [
+            [ Integer.TYPE, typeid(Integer) ], [ Short.TYPE, typeid(Short) ],
+            [ Long.TYPE, typeid(Long) ], [ Double.TYPE, typeid(Double) ],
+            [ Byte.TYPE, typeid(Byte) ], [ Float.TYPE, typeid(Float) ],
+            [ Boolean.TYPE, typeid(Boolean) ],
+            [ Character.TYPE, typeid(Character) ] ];
+    }
 
     /**
      * @param toType
      */
-    public this(ClassInfo toType) {
+    public this(TypeInfo toType) {
         this.toType = toType;
     }
 
-    protected ClassInfo getToType() {
+    protected TypeInfo getToType() {
         return this.toType;
     }
 
@@ -52,7 +56,7 @@ public class ObjectToPrimitiveValidator : IValidator {
 
     private IStatus doValidate(Object value) {
         if (value !is null) {
-            if (!mapContainsValues(toType, value.getClass())) {
+            if (!mapContainsValues(toType, getTypeInfo(value.classinfo))) {
                 return ValidationStatus.error(getClassHint());
             }
             return Status.OK_STATUS;
@@ -60,10 +64,10 @@ public class ObjectToPrimitiveValidator : IValidator {
         return ValidationStatus.error(getNullHint());
     }
 
-    private bool mapContainsValues(ClassInfo toType, ClassInfo fromType) {
+    private bool mapContainsValues(TypeInfo toType, TypeInfo fromType) {
         for (int i = 0; i < primitiveMap.length; i++) {
-            if ((primitiveMap[i][0].equals(toType))
-                    && (primitiveMap[i][1].equals(fromType))) {
+            if ((primitiveMap[i][0] == toType )
+                    && (primitiveMap[i][1] == fromType )) {
                 return true;
             }
         }
@@ -74,7 +78,7 @@ public class ObjectToPrimitiveValidator : IValidator {
      * @return a hint string
      */
     public String getNullHint() {
-        return BindingMessages.getStringcast(BindingMessages.VALIDATE_CONVERSION_TO_PRIMITIVE);
+        return BindingMessages.getString(BindingMessages.VALIDATE_CONVERSION_TO_PRIMITIVE);
     }
 
     /**
@@ -82,6 +86,6 @@ public class ObjectToPrimitiveValidator : IValidator {
      */
     public String getClassHint() {
         return BindingMessages
-                .getStringcast(BindingMessages.VALIDATE_CONVERSION_FROM_CLASS_TO_PRIMITIVE);
+                .getString(BindingMessages.VALIDATE_CONVERSION_FROM_CLASS_TO_PRIMITIVE);
     }
 }

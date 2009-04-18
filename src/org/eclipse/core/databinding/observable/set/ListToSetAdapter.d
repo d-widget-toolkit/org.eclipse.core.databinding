@@ -41,7 +41,8 @@ public class ListToSetAdapter : ObservableSet {
 
     private final IObservableList list;
 
-    private IListChangeListener listener = new class() IListChangeListener {
+    private IListChangeListener listener;
+    class Listener_ : IListChangeListener {
 
         public void handleListChange(ListChangeEvent event) {
             Set added = new HashSet();
@@ -70,6 +71,7 @@ public class ListToSetAdapter : ObservableSet {
      * @param list
      */
     public this(IObservableList list) {
+listener = new Listener_();
         super(list.getRealm(), new HashSet(), list.getElementType());
         this.list = list;
         wrappedSet.addAll(list);

@@ -56,8 +56,7 @@ public class IntegerToStringConverter : Converter {
             return stringcast(""); //$NON-NLS-1$
         }
 
-        //FIXME check with org
-        if (!Class.fromObject(boxedType).isAssignableFrom(Class.fromObject(fromObject))) {
+        if (!boxedType.isInstance(fromObject)) {
             throw new IllegalArgumentException(
                     Format("'fromObject' is not of type [{}].", boxedType)); //$NON-NLS-1$//$NON-NLS-2$
         }

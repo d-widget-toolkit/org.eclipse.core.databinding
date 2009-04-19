@@ -65,11 +65,11 @@ public class StringToCharacterConverter : IConverter {
     }
 
     public Object getFromType() {
-        return typeid(StringCls);
+        return Class.fromType!(StringCls);
     }
 
     public Object getToType() {
-        return primitiveTarget ? Character.TYPE : typeid(Character);
+        return primitiveTarget ? Character.TYPE : Class.fromType!(Character);
     }
 
     /**

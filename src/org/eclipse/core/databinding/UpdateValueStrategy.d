@@ -296,41 +296,41 @@ public class UpdateValueStrategy : UpdateStrategy {
         // We only default the validator if we defaulted the converter since the
         // two are tightly coupled.
         if (defaultedConverter) {
-            if (typeid(StringCls) is fromType) {
+            if (Class.fromType!(StringCls) is fromType) {
                 result = cast(IValidator) validatorsByConverter.get(cast(Object)converter);
 
                 if (result is null) {
                     // TODO sring based lookup
-                    if (typeid(Integer).opEquals(toType)
+                    if (Class.fromType!(Integer).opEquals(toType)
                             || Integer.TYPE.opEquals(toType)) {
                         result = new StringToIntegerValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Long).opEquals(toType)
+                    } else if (Class.fromType!(Long).opEquals(toType)
                             || Long.TYPE.opEquals(toType)) {
                         result = new StringToLongValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Float).opEquals(toType)
+                    } else if (Class.fromType!(Float).opEquals(toType)
                             || Float.TYPE.opEquals(toType)) {
                         result = new StringToFloatValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Double).opEquals(toType)
+                    } else if (Class.fromType!(Double).opEquals(toType)
                             || Double.TYPE.opEquals(toType)) {
                         result = new StringToDoubleValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Byte).opEquals(toType)
+                    } else if (Class.fromType!(Byte).opEquals(toType)
                             || Byte.TYPE.opEquals(toType)) {
                         result = new StringToByteValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Short).opEquals(toType)
+                    } else if (Class.fromType!(Short).opEquals(toType)
                             || Short.TYPE.opEquals(toType)) {
                         result = new StringToShortValidator(
                                 cast(NumberFormatConverter) converter);
-                    } else if (typeid(Character).opEquals(toType)
+                    } else if (Class.fromType!(Character).opEquals(toType)
                             || Character.TYPE.opEquals(toType)
                             && null !is cast(StringToCharacterConverter)converter ) {
                         result = new StringToCharacterValidator(
                                 cast(StringToCharacterConverter) converter);
-                    } else if (typeid(Date).opEquals(toType)
+                    } else if (Class.fromType!(Date).opEquals(toType)
                             && null !is cast(StringToDateConverter)converter ) {
                         result = new StringToDateValidator(
                                 cast(StringToDateConverter) converter);
@@ -516,34 +516,34 @@ public class UpdateValueStrategy : UpdateStrategy {
         private this() {
 validators = new HashMap();
             // Standalone validators here...
-            associate(typeid(Integer), Integer.TYPE,
+            associate(Class.fromType!(Integer), Integer.TYPE,
                     new ObjectToPrimitiveValidator(Integer.TYPE));
-            associate(typeid(Byte), Byte.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Byte), Byte.TYPE, new ObjectToPrimitiveValidator(
                     Byte.TYPE));
-            associate(typeid(Short), Short.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Short), Short.TYPE, new ObjectToPrimitiveValidator(
                     Short.TYPE));
-            associate(typeid(Long), Long.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Long), Long.TYPE, new ObjectToPrimitiveValidator(
                     Long.TYPE));
-            associate(typeid(Float), Float.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Float), Float.TYPE, new ObjectToPrimitiveValidator(
                     Float.TYPE));
-            associate(typeid(Double), Double.TYPE,
+            associate(Class.fromType!(Double), Double.TYPE,
                     new ObjectToPrimitiveValidator(Double.TYPE));
-            associate(typeid(Boolean), Boolean.TYPE,
+            associate(Class.fromType!(Boolean), Boolean.TYPE,
                     new ObjectToPrimitiveValidator(Boolean.TYPE));
 
-            associate(typeid(Object), Integer.TYPE,
+            associate(Class.fromType!(Object), Integer.TYPE,
                     new ObjectToPrimitiveValidator(Integer.TYPE));
-            associate(typeid(Object), Byte.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Object), Byte.TYPE, new ObjectToPrimitiveValidator(
                     Byte.TYPE));
-            associate(typeid(Object), Short.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Object), Short.TYPE, new ObjectToPrimitiveValidator(
                     Short.TYPE));
-            associate(typeid(Object), Long.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Object), Long.TYPE, new ObjectToPrimitiveValidator(
                     Long.TYPE));
-            associate(typeid(Object), Float.TYPE, new ObjectToPrimitiveValidator(
+            associate(Class.fromType!(Object), Float.TYPE, new ObjectToPrimitiveValidator(
                     Float.TYPE));
-            associate(typeid(Object), Double.TYPE,
+            associate(Class.fromType!(Object), Double.TYPE,
                     new ObjectToPrimitiveValidator(Double.TYPE));
-            associate(typeid(Object), Boolean.TYPE,
+            associate(Class.fromType!(Object), Boolean.TYPE,
                     new ObjectToPrimitiveValidator(Boolean.TYPE));
         }
 

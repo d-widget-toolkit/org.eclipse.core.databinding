@@ -30,9 +30,9 @@ public class NumberToLongConverter : NumberToNumberConverter {
      * @param fromType
      * @param primitive
      */
-    public this(NumberFormat numberFormat, TypeInfo fromType,
+    public this(NumberFormat numberFormat, Class fromType,
             bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Long.TYPE : typeid(Long));
+        super(numberFormat, fromType, (primitive) ? Long.TYPE : Class.fromType!(Long));
     }
 
     /* (non-Javadoc)

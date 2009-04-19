@@ -12,7 +12,6 @@
 module org.eclipse.core.internal.databinding.ClassLookupSupport;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +37,7 @@ public class ClassLookupSupport {
      * @param type
      * @return an array containing the given type and all its direct and indirect supertypes
      */
-    public static TypeInfo[] getTypeHierarchyFlattened(TypeInfo type) {
+    public static Class[] getTypeHierarchyFlattened(Class type) {
         List classes = null;
         //cache reference to lookup to protect against concurrent flush
         HashMap lookup = classSearchOrderLookup;
@@ -52,7 +51,7 @@ public class ClassLookupSupport {
                 classSearchOrderLookup = lookup = new HashMap();
             lookup.put(type, cast(Object)classes);
         }
-        return cast(TypeInfo[]) classes.toArray(new TypeInfo[classes.size()]);
+        return cast(Class[]) classes.toArray(new Class[classes.size()]);
     }
 
     /**
@@ -65,20 +64,20 @@ public class ClassLookupSupport {
      * Note that it is important to maintain a consistent class and interface
      * lookup order. See the class comment for more details.
      */
-    private static void computeClassOrder(TypeInfo adaptable, Collection classes) {
-        TypeInfo clazz = adaptable;
+    private static void computeClassOrder(Class adaptable, Collection classes) {
+        Class clazz = adaptable;
         Set seen = new HashSet(4);
         while (clazz !is null) {
             classes.add(clazz);
-            computeInterfaceOrder(getInterfaces(clazz), classes, seen);
-            clazz = isInterface(clazz) ? typeid(Object) : getSuperclass(clazz);
+            computeInterfaceOrder(clazz.getInterfaces(), classes, seen);
+            clazz = clazz.isInterface() ? Class.fromType!(Object) : clazz.getSuperclass();
         }
     }
 
-    private static void computeInterfaceOrder(TypeInfo[] interfaces, Collection classes, Set seen) {
+    private static void computeInterfaceOrder(Class[] interfaces, Collection classes, Set seen) {
         List newInterfaces = new ArrayList(interfaces.length);
         for (int i = 0; i < interfaces.length; i++) {
-            TypeInfo interfac = interfaces[i];
+            Class interfac = interfaces[i];
             if (seen.add(interfac)) {
                 //note we cannot recurse here without changing the resulting interface order
                 classes.add(interfac);
@@ -86,7 +85,7 @@ public class ClassLookupSupport {
             }
         }
         for (Iterator it = newInterfaces.iterator(); it.hasNext();)
-            computeInterfaceOrder(getInterfaces(cast(TypeInfo) it.next()), classes, seen);
+            computeInterfaceOrder((cast(Class) it.next()).getInterfaces(), classes, seen);
     }
 
 

@@ -13,7 +13,6 @@ module org.eclipse.core.internal.databinding.conversion.StringToByteConverter;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
@@ -31,9 +30,9 @@ public class StringToByteConverter : NumberFormatConverter {
      * @param numberFormat
      * @param toType
      */
-    private this(NumberFormat numberFormat, TypeInfo toType) {
-        super(typeid(StringCls), toType, numberFormat);
-        primitive = isJavaPrimitive(cast(TypeInfo)toType);
+    private this(NumberFormat numberFormat, Class toType) {
+        super(Class.fromType!(StringCls), toType, numberFormat);
+        primitive = toType.isPrimitive();
         this.numberFormat = numberFormat;
     }
 
@@ -44,7 +43,7 @@ public class StringToByteConverter : NumberFormatConverter {
      */
     public static StringToByteConverter toByte(NumberFormat numberFormat,
             bool primitive) {
-        return new StringToByteConverter(numberFormat, (primitive) ? Byte.TYPE : typeid(Byte));
+        return new StringToByteConverter(numberFormat, (primitive) ? Byte.TYPE : Class.fromType!(Byte));
     }
 
     /**

@@ -13,7 +13,6 @@ module org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.Converter;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import java.math.BigInteger;
 
@@ -27,7 +26,7 @@ import com.ibm.icu.text.NumberFormat;
  */
 public class NumberToStringConverter : Converter {
     private final NumberFormat numberFormat;
-    private final TypeInfo fromType;
+    private final Class fromType;
     private bool fromTypeIsLong;
     private bool fromTypeIsDecimalType;
     private bool fromTypeIsBigInteger;
@@ -41,20 +40,20 @@ public class NumberToStringConverter : Converter {
      * @param numberFormat
      * @param fromType
      */
-    private this(NumberFormat numberFormat, TypeInfo fromType) {
-        super(fromType, typeid(StringCls));
+    private this(NumberFormat numberFormat, Class fromType) {
+        super(fromType, Class.fromType!(StringCls));
 
         this.numberFormat = numberFormat;
         this.fromType = fromType;
 
-        if (typeid(Integer) is fromType || Integer.TYPE is fromType
-                || typeid(Long) is (fromType) || Long.TYPE is (fromType)) {
+        if (Class.fromType!(Integer) is fromType || Integer.TYPE is fromType
+                || Class.fromType!(Long) is (fromType) || Long.TYPE is (fromType)) {
             fromTypeIsLong = true;
-        } else if (typeid(Float) is (fromType) || Float.TYPE is (fromType)
-                || typeid(Double) is (fromType)
+        } else if (Class.fromType!(Float) is (fromType) || Float.TYPE is (fromType)
+                || Class.fromType!(Double) is (fromType)
                 || Double.TYPE is (fromType)) {
             fromTypeIsDecimalType = true;
-        } else if (typeid(BigInteger) is (fromType)) {
+        } else if (Class.fromType!(BigInteger) is (fromType)) {
             fromTypeIsBigInteger = true;
         }
     }
@@ -72,7 +71,7 @@ public class NumberToStringConverter : Converter {
      */
     public Object convert(Object fromObject) {
         // Null is allowed when the type is not primitve.
-        if (fromObject is null && !isJavaPrimitive(fromType)) {
+        if (fromObject is null && !fromType.isPrimitive()) {
             return stringcast(""); //$NON-NLS-1$
         }
 
@@ -112,7 +111,7 @@ public class NumberToStringConverter : Converter {
     public static NumberToStringConverter fromDouble(NumberFormat numberFormat,
             bool primitive) {
         return new NumberToStringConverter(numberFormat,
-                (primitive) ? Double.TYPE : typeid(Double));
+                (primitive) ? Double.TYPE : Class.fromType!(Double));
     }
 
     /**
@@ -132,7 +131,7 @@ public class NumberToStringConverter : Converter {
     public static NumberToStringConverter fromLong(NumberFormat numberFormat,
             bool primitive) {
         return new NumberToStringConverter(numberFormat,
-                (primitive) ? Long.TYPE : typeid(Long));
+                (primitive) ? Long.TYPE : Class.fromType!(Long));
     }
 
     /**
@@ -152,7 +151,7 @@ public class NumberToStringConverter : Converter {
     public static NumberToStringConverter fromFloat(NumberFormat numberFormat,
             bool primitive) {
         return new NumberToStringConverter(numberFormat,
-                (primitive) ? Float.TYPE : typeid(Float));
+                (primitive) ? Float.TYPE : Class.fromType!(Float));
     }
 
     /**
@@ -172,7 +171,7 @@ public class NumberToStringConverter : Converter {
     public static NumberToStringConverter fromInteger(
             NumberFormat numberFormat, bool primitive) {
         return new NumberToStringConverter(numberFormat,
-                (primitive) ? Integer.TYPE : typeid(Integer));
+                (primitive) ? Integer.TYPE : Class.fromType!(Integer));
     }
 
     /**
@@ -188,6 +187,6 @@ public class NumberToStringConverter : Converter {
      */
     public static NumberToStringConverter fromBigInteger(
             NumberFormat numberFormat) {
-        return new NumberToStringConverter(numberFormat, typeid(BigInteger));
+        return new NumberToStringConverter(numberFormat, Class.fromType!(BigInteger));
     }
 }

@@ -12,7 +12,6 @@
 module org.eclipse.core.internal.databinding.conversion.IntegerToStringConverter;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.conversion.Converter;
 
@@ -31,17 +30,17 @@ import com.ibm.icu.text.NumberFormat;
 public class IntegerToStringConverter : Converter {
     private final bool primitive;
     private final NumberFormat numberFormat;
-    private final TypeInfo boxedType;
+    private final Class boxedType;
 
     /**
      * @param numberFormat
      * @param fromType
      * @param boxedType
      */
-    private this(NumberFormat numberFormat, TypeInfo fromType,
-            TypeInfo boxedType) {
-        super(fromType, typeid(StringCls));
-        this.primitive = isJavaPrimitive(fromType);
+    private this(NumberFormat numberFormat, Class fromType,
+            Class boxedType) {
+        super(fromType, Class.fromType!(StringCls));
+        this.primitive = fromType.isPrimitive();
         this.numberFormat = numberFormat;
         this.boxedType = boxedType;
     }
@@ -57,7 +56,8 @@ public class IntegerToStringConverter : Converter {
             return stringcast(""); //$NON-NLS-1$
         }
 
-        if (!isImplicitly(fromObject.classinfo, boxedType.classinfo)) {
+        //FIXME check with org
+        if (!Class.fromObject(boxedType).isAssignableFrom(Class.fromObject(fromObject))) {
             throw new IllegalArgumentException(
                     Format("'fromObject' is not of type [{}].", boxedType)); //$NON-NLS-1$//$NON-NLS-2$
         }
@@ -81,7 +81,7 @@ public class IntegerToStringConverter : Converter {
     public static IntegerToStringConverter fromShort(NumberFormat numberFormat,
             bool primitive) {
         return new IntegerToStringConverter(numberFormat,
-                primitive ? Short.TYPE : typeid(Short), typeid(Short));
+                primitive ? Short.TYPE : Class.fromType!(Short), Class.fromType!(Short));
     }
 
     /**
@@ -100,6 +100,6 @@ public class IntegerToStringConverter : Converter {
     public static IntegerToStringConverter fromByte(NumberFormat numberFormat,
             bool primitive) {
         return new IntegerToStringConverter(numberFormat, primitive ? Byte.TYPE
-                : typeid(Byte), typeid(Byte));
+                : Class.fromType!(Byte), Class.fromType!(Byte));
     }
 }

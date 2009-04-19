@@ -15,7 +15,6 @@ module org.eclipse.core.databinding.UpdateStrategy;
 import org.eclipse.core.databinding.BindingException;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -72,23 +71,23 @@ import com.ibm.icu.text.NumberFormat;
 
     private static Map converterMap;
 
-    private static TypeInfo autoboxed(TypeInfo clazz) {
+    private static Class autoboxed(Class clazz) {
         if (clazz is Float.TYPE)
-            return typeid(Float);
+            return Class.fromType!(Float);
         else if (clazz is Double.TYPE)
-            return typeid(Double);
+            return Class.fromType!(Double);
         else if (clazz is Short.TYPE)
-            return typeid(Short);
+            return Class.fromType!(Short);
         else if (clazz is Integer.TYPE)
-            return typeid(Integer);
+            return Class.fromType!(Integer);
         else if (clazz is Long.TYPE)
-            return typeid(Long);
+            return Class.fromType!(Long);
         else if (clazz is Byte.TYPE)
-            return typeid(Byte);
+            return Class.fromType!(Byte);
         else if (clazz is Boolean.TYPE)
-            return typeid(Boolean);
+            return Class.fromType!(Boolean);
         else if (clazz is Character.TYPE)
-            return typeid(Character);
+            return Class.fromType!(Character);
         return clazz;
     }
 
@@ -114,32 +113,32 @@ import com.ibm.icu.text.NumberFormat;
      * @return an IConverter, or <code>null</code> if unsuccessful
      */
     protected IConverter createConverter(Object fromType, Object toType) {
-        if (!( null !is cast(TypeInfo)fromType ) || !( null !is cast(TypeInfo)toType )) {
+        if (!( null !is cast(Class)fromType ) || !( null !is cast(Class)toType )) {
             return new DefaultConverter(fromType, toType);
         }
-        TypeInfo toClass = cast(TypeInfo) toType;
-        TypeInfo originalToClass = toClass;
-        if (isJavaPrimitive(toClass)) {
+        Class toClass = cast(Class) toType;
+        Class originalToClass = toClass;
+        if (toClass.isPrimitive()) {
             toClass = autoboxed(toClass);
         }
-        TypeInfo fromClass = cast(TypeInfo) fromType;
-        TypeInfo originalFromClass = fromClass;
-        if (isJavaPrimitive(fromClass)) {
+        Class fromClass = cast(Class) fromType;
+        Class originalFromClass = fromClass;
+        if (fromClass.isPrimitive()) {
             fromClass = autoboxed(fromClass);
         }
-        if (!isJavaPrimitive(cast(TypeInfo) toType)
-                && isImplicitly(fromClass, toClass)) {
+        if (!(cast(Class) toType).isPrimitive()
+                && toClass.isAssignableFrom(fromClass)) {
             return new IdentityConverter(originalFromClass, originalToClass);
         }
-        if (isJavaPrimitive(cast(TypeInfo) fromType) && isJavaPrimitive(cast(TypeInfo) toType)
+        if ((cast(Class) fromType).isPrimitive() && (cast(Class) toType).isPrimitive()
                 && fromType.opEquals(toType)) {
             return new IdentityConverter(originalFromClass, originalToClass);
         }
         Map converterMap = getConverterMap();
-        TypeInfo[] supertypeHierarchyFlattened = ClassLookupSupport
+        Class[] supertypeHierarchyFlattened = ClassLookupSupport
                 .getTypeHierarchyFlattened(fromClass);
         for (int i = 0; i < supertypeHierarchyFlattened.length; i++) {
-            TypeInfo currentFromClass = supertypeHierarchyFlattened[i];
+            Class currentFromClass = supertypeHierarchyFlattened[i];
             if (currentFromClass is toType) {
                 // converting to toType is just a widening
                 return new IdentityConverter(fromClass, toClass);
@@ -151,11 +150,11 @@ import com.ibm.icu.text.NumberFormat;
                 return cast(IConverter) converterOrClassname;
             } else if ( null !is cast(ArrayWrapperString)converterOrClassname ) {
                 String classname = stringcast( converterOrClassname);
-                ClassInfo converterClass;
+                Class converterClass;
                 try {
-                    converterClass = ClassInfo.find(classname);
+                    converterClass = Class.forName(classname);
                     IConverter result = cast(IConverter) converterClass
-                            .create();
+                            .newInstance();
                     converterMap.put(stringcast(key), cast(Object)result);
                     return result;
                 } catch (Exception e) {
@@ -173,7 +172,7 @@ import com.ibm.icu.text.NumberFormat;
         // Since we found no converter yet, try a "downcast" converter;
         // the IdentityConverter will automatically check the actual types at
         // runtime.
-        if (isImplicitly(toClass, fromClass)) {
+        if (fromClass.isAssignableFrom(toClass)) {
             return new IdentityConverter(originalFromClass, originalToClass);
         }
         return new DefaultConverter(fromType, toType);
@@ -259,10 +258,10 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair("java.lang.String", INTEGER_TYPE), StringToNumberConverter.toInteger(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(INTEGER_TYPE, "java.lang.Integer"), new IdentityConverter(Integer.TYPE, typeid(Integer))); //$NON-NLS-1$
+                            new Pair(INTEGER_TYPE, "java.lang.Integer"), new IdentityConverter(Integer.TYPE, Class.fromType!(Integer))); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(INTEGER_TYPE, "java.lang.Object"), new IdentityConverter(Integer.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(INTEGER_TYPE, "java.lang.Object"), new IdentityConverter(Integer.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
             converterMap
                     .put(
                             new Pair(INTEGER_TYPE, "java.lang.String"), NumberToStringConverter.fromInteger(integerFormat, true)); //$NON-NLS-1$
@@ -273,13 +272,13 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair("java.lang.String", BYTE_TYPE), StringToByteConverter.toByte(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(BYTE_TYPE, "java.lang.Byte"), new IdentityConverter(Byte.TYPE, typeid(Byte))); //$NON-NLS-1$
+                            new Pair(BYTE_TYPE, "java.lang.Byte"), new IdentityConverter(Byte.TYPE, Class.fromType!(Byte))); //$NON-NLS-1$
             converterMap
                     .put(
                             new Pair(BYTE_TYPE, "java.lang.String"), IntegerToStringConverter.fromByte(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(BYTE_TYPE, "java.lang.Object"), new IdentityConverter(Byte.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(BYTE_TYPE, "java.lang.Object"), new IdentityConverter(Byte.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Double.TYPE
             converterMap
@@ -291,10 +290,10 @@ import com.ibm.icu.text.NumberFormat;
 
             converterMap
                     .put(
-                            new Pair(DOUBLE_TYPE, "java.lang.Double"), new IdentityConverter(Double.TYPE, typeid(Double))); //$NON-NLS-1$
+                            new Pair(DOUBLE_TYPE, "java.lang.Double"), new IdentityConverter(Double.TYPE, Class.fromType!(Double))); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(DOUBLE_TYPE, "java.lang.Object"), new IdentityConverter(Double.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(DOUBLE_TYPE, "java.lang.Object"), new IdentityConverter(Double.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Boolean.TYPE
             converterMap
@@ -302,13 +301,13 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair("java.lang.String", BOOLEAN_TYPE), "org.eclipse.core.internal.databinding.conversion.StringToBooleanPrimitiveConverter"); //$NON-NLS-1$ //$NON-NLS-2$
             converterMap
                     .put(
-                            new Pair(BOOLEAN_TYPE, "java.lang.Boolean"), new IdentityConverter(Boolean.TYPE, typeid(Boolean))); //$NON-NLS-1$
+                            new Pair(BOOLEAN_TYPE, "java.lang.Boolean"), new IdentityConverter(Boolean.TYPE, Class.fromType!(Boolean))); //$NON-NLS-1$
             converterMap
                     .put(
                             new Pair(BOOLEAN_TYPE, "java.lang.String"), new ObjectToStringConverter(Boolean.TYPE)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(BOOLEAN_TYPE, "java.lang.Object"), new IdentityConverter(Boolean.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(BOOLEAN_TYPE, "java.lang.Object"), new IdentityConverter(Boolean.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Float.TYPE
             converterMap
@@ -319,10 +318,10 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair(FLOAT_TYPE, "java.lang.String"), NumberToStringConverter.fromFloat(numberFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(FLOAT_TYPE, "java.lang.Float"), new IdentityConverter(Float.TYPE, typeid(Float))); //$NON-NLS-1$
+                            new Pair(FLOAT_TYPE, "java.lang.Float"), new IdentityConverter(Float.TYPE, Class.fromType!(Float))); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(FLOAT_TYPE, "java.lang.Object"), new IdentityConverter(Float.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(FLOAT_TYPE, "java.lang.Object"), new IdentityConverter(Float.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Short.TYPE
             converterMap
@@ -330,13 +329,13 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair("java.lang.String", SHORT_TYPE), StringToShortConverter.toShort(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(SHORT_TYPE, "java.lang.Short"), new IdentityConverter(Short.TYPE, typeid(Short))); //$NON-NLS-1$
+                            new Pair(SHORT_TYPE, "java.lang.Short"), new IdentityConverter(Short.TYPE, Class.fromType!(Short))); //$NON-NLS-1$
             converterMap
                     .put(
                             new Pair(SHORT_TYPE, "java.lang.String"), IntegerToStringConverter.fromShort(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(SHORT_TYPE, "java.lang.Object"), new IdentityConverter(Short.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(SHORT_TYPE, "java.lang.Object"), new IdentityConverter(Short.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Long.TYPE
             converterMap
@@ -347,10 +346,10 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair(LONG_TYPE, "java.lang.String"), NumberToStringConverter.fromLong(integerFormat, true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(LONG_TYPE, "java.lang.Long"), new IdentityConverter(Long.TYPE, typeid(Long))); //$NON-NLS-1$
+                            new Pair(LONG_TYPE, "java.lang.Long"), new IdentityConverter(Long.TYPE, Class.fromType!(Long))); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(LONG_TYPE, "java.lang.Object"), new IdentityConverter(Long.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(LONG_TYPE, "java.lang.Object"), new IdentityConverter(Long.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Character.TYPE
             converterMap
@@ -358,13 +357,13 @@ import com.ibm.icu.text.NumberFormat;
                             new Pair("java.lang.String", CHARACTER_TYPE), StringToCharacterConverter.toCharacter(true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(CHARACTER_TYPE, "java.lang.Character"), new IdentityConverter(Character.TYPE, typeid(Character))); //$NON-NLS-1$
+                            new Pair(CHARACTER_TYPE, "java.lang.Character"), new IdentityConverter(Character.TYPE, Class.fromType!(Character))); //$NON-NLS-1$
             converterMap
                     .put(
                             new Pair(CHARACTER_TYPE, "java.lang.String"), CharacterToStringConverter.fromCharacter(true)); //$NON-NLS-1$
             converterMap
                     .put(
-                            new Pair(CHARACTER_TYPE, "java.lang.Object"), new IdentityConverter(Character.TYPE, typeid(Object))); //$NON-NLS-1$
+                            new Pair(CHARACTER_TYPE, "java.lang.Object"), new IdentityConverter(Character.TYPE, Class.fromType!(Object))); //$NON-NLS-1$
 
             // Miscellaneous
             converterMap
@@ -412,14 +411,14 @@ import com.ibm.icu.text.NumberFormat;
         return converterMap;
     }
 
-    private static TypeInfo[] integerClasses;
-    private static TypeInfo[] floatClasses;
+    private static Class[] integerClasses;
+    private static Class[] floatClasses;
     static this(){
             integerClasses = [ Byte.TYPE,
-                           typeid(Byte), Short.TYPE, typeid(Short), Integer.TYPE, typeid(Integer),
-                           Long.TYPE, typeid(Long), typeid(BigInteger) ];
+                           Class.fromType!(Byte), Short.TYPE, Class.fromType!(Short), Integer.TYPE, Class.fromType!(Integer),
+                           Long.TYPE, Class.fromType!(Long), Class.fromType!(BigInteger) ];
             floatClasses = [ Float.TYPE,
-                         typeid(Float), Double.TYPE, typeid(Double), typeid(BigDecimal) ];
+                         Class.fromType!(Float), Double.TYPE, Class.fromType!(Double), Class.fromType!(BigDecimal) ];
     }
 
 
@@ -432,20 +431,20 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToByteConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
 
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Byte) && fromType != Byte.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Byte) && fromType != Byte.TYPE) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
                         .put(new Pair(fromName, BYTE_TYPE),
                                 new NumberToByteConverter(numberFormat,
                                         fromType, true));
                 map
-                        .put(new Pair(fromName, .getName(Byte.classinfo)),
+                        .put(new Pair(fromName, Class.fromType!(Byte).getName()),
                                 new NumberToByteConverter(numberFormat,
                                         fromType, false));
             }
@@ -461,18 +460,18 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToShortConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Short) && fromType != Short.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Short) && fromType != Short.TYPE) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
                         .put(new Pair(fromName, SHORT_TYPE),
                                 new NumberToShortConverter(numberFormat,
                                         fromType, true));
-                map.put(new Pair(fromName, .getName(Short.classinfo)),
+                map.put(new Pair(fromName, Class.fromType!(Short).getName()),
                         new NumberToShortConverter(numberFormat, fromType,
                                 false));
             }
@@ -488,18 +487,18 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToIntegerConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Integer)
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Integer)
                     && fromType != Integer.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map.put(new Pair(fromName, INTEGER_TYPE),
                         new NumberToIntegerConverter(numberFormat, fromType,
                                 true));
-                map.put(new Pair(fromName, .getName(Integer.classinfo)),
+                map.put(new Pair(fromName, Class.fromType!(Integer).getName()),
                         new NumberToIntegerConverter(numberFormat, fromType,
                                 false));
             }
@@ -515,19 +514,19 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToLongConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Long) && fromType != Long.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Long) && fromType != Long.TYPE) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
                         .put(new Pair(fromName, LONG_TYPE),
                                 new NumberToLongConverter(numberFormat,
                                         fromType, true));
                 map
-                        .put(new Pair(fromName, .getName(Long.classinfo)),
+                        .put(new Pair(fromName, Class.fromType!(Long).getName()),
                                 new NumberToLongConverter(numberFormat,
                                         fromType, false));
             }
@@ -543,18 +542,18 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToFloatConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Float) && fromType != Float.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Float) && fromType != Float.TYPE) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
                         .put(new Pair(fromName, FLOAT_TYPE),
                                 new NumberToFloatConverter(numberFormat,
                                         fromType, true));
-                map.put(new Pair(fromName, .getName(Float.classinfo)),
+                map.put(new Pair(fromName, Class.fromType!(Float).getName()),
                         new NumberToFloatConverter(numberFormat, fromType,
                                 false));
             }
@@ -570,17 +569,17 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToDoubleConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (fromType != typeid(Double) && fromType != Double.TYPE) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (fromType != Class.fromType!(Double) && fromType != Double.TYPE) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map.put(new Pair(fromName, DOUBLE_TYPE),
                         new NumberToDoubleConverter(numberFormat, fromType,
                                 true));
-                map.put(new Pair(fromName, .getName(Double.classinfo)),
+                map.put(new Pair(fromName, Class.fromType!(Double).getName()),
                         new NumberToDoubleConverter(numberFormat, fromType,
                                 false));
             }
@@ -596,15 +595,15 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToBigIntegerConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (!fromType.opEquals(typeid(BigInteger))) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (!fromType.opEquals(Class.fromType!(BigInteger))) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
-                        .put(new Pair(fromName, .getName(BigInteger.classinfo)),
+                        .put(new Pair(fromName, Class.fromType!(BigInteger).getName()),
                                 new NumberToBigIntegerConverter(numberFormat,
                                         fromType));
             }
@@ -620,15 +619,15 @@ import com.ibm.icu.text.NumberFormat;
      * @param fromTypes
      */
     private static void addNumberToBigDecimalConverters(Map map,
-            NumberFormat numberFormat, TypeInfo[] fromTypes) {
+            NumberFormat numberFormat, Class[] fromTypes) {
         for (int i = 0; i < fromTypes.length; i++) {
-            TypeInfo fromType = fromTypes[i];
-            if (!fromType.opEquals(typeid(BigDecimal))) {
-                String fromName = isJavaPrimitive(fromType) ? getKeyForClass(
-                        fromType, null) : .getName(fromType);
+            Class fromType = fromTypes[i];
+            if (!fromType.opEquals(Class.fromType!(BigDecimal))) {
+                String fromName = fromType.isPrimitive() ? getKeyForClass(
+                        fromType, null) : fromType.getName();
 
                 map
-                        .put(new Pair(fromName, .getName(BigDecimal.classinfo)),
+                        .put(new Pair(fromName, Class.fromType!(BigDecimal).getName()),
                                 new NumberToBigDecimalConverter(numberFormat,
                                         fromType));
             }
@@ -636,9 +635,9 @@ import com.ibm.icu.text.NumberFormat;
     }
 
     private static String getKeyForClass(Object originalValue,
-            TypeInfo filteredValue) {
-        if ( null !is cast(TypeInfo)originalValue ) {
-            TypeInfo originalClass = cast(TypeInfo) originalValue;
+            Class filteredValue) {
+        if ( null !is cast(Class)originalValue ) {
+            Class originalClass = cast(Class) originalValue;
             if (originalClass == Integer.TYPE) {
                 return INTEGER_TYPE;
             } else if (originalClass == Byte.TYPE) {
@@ -655,7 +654,7 @@ import com.ibm.icu.text.NumberFormat;
                 return SHORT_TYPE;
             }
         }
-        return .getName(filteredValue);
+        return filteredValue.getName();
     }
 
     /**
@@ -669,16 +668,16 @@ import com.ibm.icu.text.NumberFormat;
      *         if unknown
      */
     protected Boolean isAssignableFromTo(Object fromType, Object toType) {
-        if ( null !is cast(TypeInfo)fromType && null !is cast(TypeInfo)toType ) {
-            TypeInfo toClass = cast(TypeInfo) toType;
-            if (isJavaPrimitive(toClass)) {
+        if ( null !is cast(Class)fromType && null !is cast(Class)toType ) {
+            Class toClass = cast(Class) toType;
+            if (toClass.isPrimitive()) {
                 toClass = autoboxed(toClass);
             }
-            TypeInfo fromClass = cast(TypeInfo) fromType;
-            if (isJavaPrimitive(fromClass)) {
+            Class fromClass = cast(Class) fromType;
+            if (fromClass.isPrimitive()) {
                 fromClass = autoboxed(fromClass);
             }
-            return isImplicitly(fromClass, toClass) ? Boolean.TRUE
+            return toClass.isAssignableFrom(fromClass) ? Boolean.TRUE
                     : Boolean.FALSE;
         }
         return null;

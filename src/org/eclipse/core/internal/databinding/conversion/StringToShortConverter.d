@@ -13,7 +13,6 @@ module org.eclipse.core.internal.databinding.conversion.StringToShortConverter;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
@@ -31,10 +30,10 @@ public class StringToShortConverter : NumberFormatConverter {
     /**
      * Constructs a new instance.
      */
-    private this(NumberFormat numberFormat, TypeInfo toType) {
-        super(typeid(String), toType, numberFormat);
+    private this(NumberFormat numberFormat, Class toType) {
+        super(Class.fromType!(String), toType, numberFormat);
         this.numberFormat = numberFormat;
-        primitive = isJavaPrimitive(toType);
+        primitive = toType.isPrimitive();
     }
 
     /*
@@ -90,6 +89,6 @@ public class StringToShortConverter : NumberFormatConverter {
     public static StringToShortConverter toShort(NumberFormat numberFormat,
             bool primitive) {
         return new StringToShortConverter(numberFormat,
-                (primitive) ? Short.TYPE : typeid(Short));
+                (primitive) ? Short.TYPE : Class.fromType!(Short));
     }
 }

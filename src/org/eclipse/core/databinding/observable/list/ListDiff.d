@@ -15,7 +15,6 @@ import org.eclipse.core.databinding.observable.list.ListDiffEntry;
 import org.eclipse.core.databinding.observable.list.ListDiffVisitor;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.internal.databinding.Util;
 
@@ -94,7 +93,7 @@ public abstract class ListDiff {
     public String toString() {
         ListDiffEntry[] differences = getDifferences();
         StringBuffer buffer = new StringBuffer();
-        buffer.append(.getName( this.classinfo ));
+        buffer.append(Class.fromObject(this).getName());
         
         if (differences is null || differences.length is 0) {
             buffer

@@ -31,9 +31,9 @@ public class NumberToByteConverter : NumberToNumberConverter {
      * @param fromType
      * @param primitive
      */
-    public this(NumberFormat numberFormat, TypeInfo fromType,
+    public this(NumberFormat numberFormat, Class fromType,
             bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Byte.TYPE : typeid(Byte));
+        super(numberFormat, fromType, (primitive) ? Byte.TYPE : Class.fromType!(Byte));
     }
 
     /* (non-Javadoc)

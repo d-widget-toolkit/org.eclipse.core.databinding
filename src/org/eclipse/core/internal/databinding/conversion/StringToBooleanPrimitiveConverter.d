@@ -80,7 +80,7 @@ public class StringToBooleanPrimitiveConverter : IConverter {
     }
 
     public Object getFromType() {
-        return typeid(StringCls);
+        return Class.fromType!(StringCls);
     }
 
     public Object getToType() {

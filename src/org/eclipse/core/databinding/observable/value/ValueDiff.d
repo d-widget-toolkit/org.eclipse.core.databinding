@@ -12,7 +12,6 @@
 module org.eclipse.core.databinding.observable.value.ValueDiff;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.observable.Diffs;
 
@@ -64,7 +63,7 @@ public abstract class ValueDiff {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer
-            .append(.getName(this.classinfo))
+            .append(Class.fromObject(this).getName())
             .append("{oldValue [") //$NON-NLS-1$
             .append(getOldValue() !is null ? getOldValue().toString() : "null") //$NON-NLS-1$
             .append("], newValue [") //$NON-NLS-1$

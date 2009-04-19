@@ -30,10 +30,10 @@ public class NumberToShortConverter : NumberToNumberConverter {
      * @param fromType
      * @param primitive
      */
-    public this(NumberFormat numberFormat, TypeInfo fromType,
+    public this(NumberFormat numberFormat, Class fromType,
             bool primitive) {
 
-        super(numberFormat, fromType, (primitive) ? Short.TYPE : typeid(Short));
+        super(numberFormat, fromType, (primitive) ? Short.TYPE : Class.fromType!(Short));
     }
 
     /*

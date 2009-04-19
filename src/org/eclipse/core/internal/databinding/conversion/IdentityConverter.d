@@ -13,7 +13,6 @@
 module org.eclipse.core.internal.databinding.conversion.IdentityConverter;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.BindingException;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -23,14 +22,14 @@ import org.eclipse.core.databinding.conversion.IConverter;
  */
 public class IdentityConverter : IConverter {
 
-    private TypeInfo fromType;
+    private Class fromType;
 
-    private TypeInfo toType;
+    private Class toType;
 
     /**
      * @param type
      */
-    public this(TypeInfo type) {
+    public this(Class type) {
         this.fromType = type;
         this.toType = type;
         initPrimitiveMap();
@@ -40,21 +39,21 @@ public class IdentityConverter : IConverter {
      * @param fromType
      * @param toType
      */
-    public this(TypeInfo fromType, TypeInfo toType) {
+    public this(Class fromType, Class toType) {
         this.fromType = fromType;
         this.toType = toType;
         initPrimitiveMap();
     }
 
-    private TypeInfo[][] primitiveMap;
+    private Class[][] primitiveMap;
 
     private void initPrimitiveMap(){
         primitiveMap = [
-            [ cast(TypeInfo)Integer.TYPE, typeid(Integer) ], [ cast(TypeInfo)Short.TYPE, typeid(Short) ],
-            [ cast(TypeInfo)Long.TYPE, typeid(Long) ], [ cast(TypeInfo)Double.TYPE, typeid(Double) ],
-            [ cast(TypeInfo)Byte.TYPE, typeid(Byte) ], [ cast(TypeInfo)Float.TYPE, typeid(Float) ],
-            [ cast(TypeInfo)Boolean.TYPE, typeid(Boolean) ],
-            [ cast(TypeInfo)Character.TYPE, typeid(Character) ] ];
+            [ cast(Class)Integer.TYPE, Class.fromType!(Integer) ], [ cast(Class)Short.TYPE, Class.fromType!(Short) ],
+            [ cast(Class)Long.TYPE, Class.fromType!(Long) ], [ cast(Class)Double.TYPE, Class.fromType!(Double) ],
+            [ cast(Class)Byte.TYPE, Class.fromType!(Byte) ], [ cast(Class)Float.TYPE, Class.fromType!(Float) ],
+            [ cast(Class)Boolean.TYPE, Class.fromType!(Boolean) ],
+            [ cast(Class)Character.TYPE, Class.fromType!(Character) ] ];
     }
 
     /*
@@ -63,14 +62,14 @@ public class IdentityConverter : IConverter {
      * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
      */
     public Object convert(Object source) {
-        if ( isJavaPrimitive(toType)) {
+        if ( toType.isPrimitive()) {
             if (source is null) {
                 throw new BindingException("Cannot convert null to a primitive"); //$NON-NLS-1$
             }
         }
         if (source !is null) {
-            TypeInfo sourceClass = getTypeInfo(source.classinfo);
-            if (isJavaPrimitive(toType) || isJavaPrimitive(sourceClass)) {
+            Class sourceClass = Class.fromObject(source);
+            if (toType.isPrimitive() || sourceClass.isPrimitive()) {
                 if (sourceClass.opEquals(toType)
                         || isPrimitiveTypeMatchedWithBoxed(sourceClass, toType)) {
                     return source;
@@ -78,9 +77,9 @@ public class IdentityConverter : IConverter {
                 throw new BindingException(
                         "Boxed and unboxed types do not match"); //$NON-NLS-1$
             }
-            if (!isImplicitly(sourceClass, toType)) {
-                throw new BindingException(asClass(sourceClass).name
-                        ~ " is not assignable to " ~ asClass(toType).name); //$NON-NLS-1$
+            if (!toType.isAssignableFrom(sourceClass)) {
+                throw new BindingException(Class.fromObject(sourceClass).getName()
+                        ~ " is not assignable to " ~ Class.fromObject(toType).getName()); //$NON-NLS-1$
             }
         }
         return source;
@@ -93,8 +92,8 @@ public class IdentityConverter : IConverter {
      * @param toClass
      * @return true if sourceClass and toType are matched primitive/boxed types
      */
-    public bool isPrimitiveTypeMatchedWithBoxed(TypeInfo sourceClass,
-            TypeInfo toClass) {
+    public bool isPrimitiveTypeMatchedWithBoxed(Class sourceClass,
+            Class toClass) {
         for (int i = 0; i < primitiveMap.length; i++) {
             if (toClass.opEquals(primitiveMap[i][0])
                     && sourceClass.opEquals(primitiveMap[i][1])) {

@@ -32,8 +32,8 @@ public class NumberToBigIntegerConverter : NumberToNumberConverter {
      * @param numberFormat
      * @param fromType
      */
-    public this(NumberFormat numberFormat, TypeInfo fromType) {
-        super(numberFormat, fromType, typeid(BigInteger));
+    public this(NumberFormat numberFormat, Class fromType) {
+        super(numberFormat, fromType, Class.fromType!(BigInteger));
     }
 
     /* (non-Javadoc)

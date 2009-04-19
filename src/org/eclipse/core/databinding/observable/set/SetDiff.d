@@ -12,7 +12,6 @@
 module org.eclipse.core.databinding.observable.set.SetDiff;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import java.util.Set;
 
@@ -38,7 +37,7 @@ public abstract class SetDiff {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer
-            .append(.getName(this.classinfo))
+            .append(Class.fromObject(this).getName())
             .append("{additions [") //$NON-NLS-1$
             .append(getAdditions() !is null ? getAdditions().toString() : "null") //$NON-NLS-1$
             .append("], removals [") //$NON-NLS-1$

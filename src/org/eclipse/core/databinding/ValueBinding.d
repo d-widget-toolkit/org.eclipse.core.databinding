@@ -87,7 +87,7 @@ modelChangeListener = new ModelChangeListener();
 
     protected void preInit() {
         validationStatusObservable = new WritableValue(context
-                .getValidationRealm(), cast(Object) Status.OK_STATUS, typeid(IStatus));
+                .getValidationRealm(), cast(Object) Status.OK_STATUS, Class.fromType!(IStatus));
     }
 
     protected void postInit() {

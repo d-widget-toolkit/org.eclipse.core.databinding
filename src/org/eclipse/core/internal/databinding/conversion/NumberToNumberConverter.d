@@ -13,7 +13,6 @@ module org.eclipse.core.internal.databinding.conversion.NumberToNumberConverter;
 import org.eclipse.core.internal.databinding.conversion.StringToNumberParser;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.conversion.Converter;
 
@@ -35,10 +34,10 @@ public abstract class NumberToNumberConverter : Converter {
     private String outOfRangeMessage;
 
     protected this(NumberFormat numberFormat,
-            TypeInfo fromType, TypeInfo toType) {
+            Class fromType, Class toType) {
         super(fromType, toType);
         this.numberFormat = numberFormat;
-        this.primitive = isJavaPrimitive(toType);
+        this.primitive = toType.isPrimitive();
     }
 
     /*

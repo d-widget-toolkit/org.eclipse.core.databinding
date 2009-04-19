@@ -33,7 +33,7 @@ public class StatusToStringConverter : Converter , IConverter {
      * Constructs a new instance.
      */
     public this() {
-        super(typeid(IStatus), typeid(StringCls));
+        super(Class.fromType!(IStatus), Class.fromType!(StringCls));
     }
     
     /* (non-Javadoc)

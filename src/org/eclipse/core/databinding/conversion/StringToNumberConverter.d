@@ -12,7 +12,6 @@
 module org.eclipse.core.databinding.conversion.StringToNumberConverter;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,7 +28,7 @@ import com.ibm.icu.text.NumberFormat;
  * @since 1.0
  */
 public class StringToNumberConverter : NumberFormatConverter {
-    private TypeInfo toType;
+    private Class toType;
     /**
      * NumberFormat instance to use for conversion. Access must be synchronized.
      */
@@ -49,7 +48,7 @@ public class StringToNumberConverter : NumberFormatConverter {
     /**
      * The boxed type of the toType;
      */
-    private final TypeInfo boxedType;
+    private final Class boxedType;
 
     private static const Integer MIN_INTEGER;
     private static const Integer MAX_INTEGER;
@@ -90,9 +89,9 @@ public class StringToNumberConverter : NumberFormatConverter {
      *            a convenience that allows for the checking against one type
      *            rather than boxed and unboxed types
      */
-    private this(NumberFormat numberFormat, TypeInfo toType,
-            Number min, Number max, TypeInfo boxedType) {
-        super(typeid(StringCls), toType, numberFormat);
+    private this(NumberFormat numberFormat, Class toType,
+            Number min, Number max, Class boxedType) {
+        super(Class.fromType!(StringCls), toType, numberFormat);
 
         this.toType = toType;
         this.numberFormat = numberFormat;
@@ -115,7 +114,7 @@ public class StringToNumberConverter : NumberFormatConverter {
      */
     public Object convert(Object fromObject) {
         StringToNumberParser.ParseResult result = StringToNumberParser.parse(fromObject,
-                numberFormat, isJavaPrimitive(toType));
+                numberFormat, toType.isPrimitive());
 
         if (result.getPosition() !is null) {
             // this shouldn't happen in the pipeline as validation should catch
@@ -135,23 +134,23 @@ public class StringToNumberConverter : NumberFormatConverter {
          * validator should have validated this already but we shouldn't assume
          * this has occurred.
          */
-        if (typeid(Integer) is (boxedType)) {
+        if (Class.fromType!(Integer) is boxedType) {
             if (StringToNumberParser.inIntegerRange(result.getNumber())) {
                 return new Integer(result.getNumber().intValue());
             }
-        } else if (typeid(Double) is (boxedType)) {
+        } else if (Class.fromType!(Double) is boxedType) {
             if (StringToNumberParser.inDoubleRange(result.getNumber())) {
                 return new Double(result.getNumber().doubleValue());
             }
-        } else if (typeid(Long) is (boxedType)) {
+        } else if (Class.fromType!(Long) is boxedType) {
             if (StringToNumberParser.inLongRange(result.getNumber())) {
                 return new Long(result.getNumber().longValue());
             }
-        } else if (typeid(Float) is (boxedType)) {
+        } else if (Class.fromType!(Float) is boxedType) {
             if (StringToNumberParser.inFloatRange(result.getNumber())) {
                 return new Float(result.getNumber().floatValue());
             }
-        } else if (typeid(BigInteger) is (boxedType)) {
+        } else if (Class.fromType!(BigInteger) is boxedType) {
             return (new BigDecimal(result.getNumber().doubleValue()))
                     .toBigInteger();
         }
@@ -186,8 +185,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toInteger(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Integer.TYPE : typeid(Integer), MIN_INTEGER,
-                MAX_INTEGER, typeid(Integer));
+                (primitive) ? Integer.TYPE : Class.fromType!(Integer), MIN_INTEGER,
+                MAX_INTEGER, Class.fromType!(Integer));
     }
 
     /**
@@ -207,8 +206,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toDouble(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Double.TYPE : typeid(Double), MIN_DOUBLE,
-                MAX_DOUBLE, typeid(Double));
+                (primitive) ? Double.TYPE : Class.fromType!(Double), MIN_DOUBLE,
+                MAX_DOUBLE, Class.fromType!(Double));
     }
 
     /**
@@ -228,8 +227,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toLong(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Long.TYPE : typeid(Long), MIN_LONG, MAX_LONG,
-                typeid(Long));
+                (primitive) ? Long.TYPE : Class.fromType!(Long), MIN_LONG, MAX_LONG,
+                Class.fromType!(Long));
     }
 
     /**
@@ -249,8 +248,8 @@ public class StringToNumberConverter : NumberFormatConverter {
     public static StringToNumberConverter toFloat(NumberFormat numberFormat,
             bool primitive) {
         return new StringToNumberConverter(numberFormat,
-                (primitive) ? Float.TYPE : typeid(Float), MIN_FLOAT, MAX_FLOAT,
-                typeid(Float));
+                (primitive) ? Float.TYPE : Class.fromType!(Float), MIN_FLOAT, MAX_FLOAT,
+                Class.fromType!(Float));
     }
 
     /**
@@ -265,7 +264,7 @@ public class StringToNumberConverter : NumberFormatConverter {
      * @return to BigInteger converter with the provided numberFormat
      */
     public static StringToNumberConverter toBigInteger(NumberFormat numberFormat) {
-        return new StringToNumberConverter(numberFormat, typeid(BigInteger),
-                null, null, typeid(BigInteger));
+        return new StringToNumberConverter(numberFormat, Class.fromType!(BigInteger),
+                null, null, Class.fromType!(BigInteger));
     }
 }

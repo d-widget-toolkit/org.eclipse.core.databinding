@@ -19,19 +19,19 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * Converts any object to a string by calling its toString() method.
  */
 public class ObjectToStringConverter : IConverter {
-    private final TypeInfo fromClass;
+    private final Class fromClass;
 
     /**
      * 
      */
     public this() {
-        this(typeid(Object));
+        this(Class.fromType!(Object));
     }
 
     /**
      * @param fromClass
      */
-    public this(TypeInfo fromClass) {
+    public this(Class fromClass) {
         this.fromClass = fromClass;
     }
 
@@ -52,7 +52,7 @@ public class ObjectToStringConverter : IConverter {
     }
 
     public Object getToType() {
-        return typeid(StringCls);
+        return Class.fromType!(StringCls);
     }
 
 }

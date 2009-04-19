@@ -44,8 +44,8 @@ public class NumberToIntegerConverter : NumberToNumberConverter ,
      * @param primitive
      */
     public this(NumberFormat numberFormat,
-            TypeInfo fromType, bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Integer.TYPE : typeid(Integer));
+            Class fromType, bool primitive) {
+        super(numberFormat, fromType, (primitive) ? Integer.TYPE : Class.fromType!(Integer));
     }
 
     /* (non-Javadoc)

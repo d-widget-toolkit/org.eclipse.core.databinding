@@ -32,9 +32,9 @@ public class NumberToDoubleConverter : NumberToNumberConverter {
      * @param fromType
      * @param primitive
      */
-    public this(NumberFormat numberFormat, TypeInfo fromType,
+    public this(NumberFormat numberFormat, Class fromType,
             bool primitive) {
-        super(numberFormat, fromType, (primitive) ? Double.TYPE : typeid(Double));
+        super(numberFormat, fromType, (primitive) ? Double.TYPE : Class.fromType!(Double));
     }
 
     /* (non-Javadoc)

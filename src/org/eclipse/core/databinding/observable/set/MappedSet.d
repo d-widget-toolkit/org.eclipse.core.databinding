@@ -119,7 +119,7 @@ public class MappedSet : ObservableSet {
 valueCounts = new HashMap();
 domainListener = new DomainListener();
 mapChangeListener = new MapChangeListener();
-        super(input.getRealm(), Collections.EMPTY_SET, typeid(Object));
+        super(input.getRealm(), Collections.EMPTY_SET, Class.fromType!(Object));
         setWrappedSet(valueCounts.keySet());
         this.wrappedMap = map;
         this.input = input;

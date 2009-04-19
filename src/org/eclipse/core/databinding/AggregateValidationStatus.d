@@ -113,9 +113,9 @@ public final class AggregateValidationStatus : IObservableValue {
     public this(Realm realm,
             IObservableCollection validationStatusProviders, int strategy) {
         if (strategy is MERGED) {
-            implementation = new class(realm, typeid(IStatus), validationStatusProviders) ComputedValue {
+            implementation = new class(realm, Class.fromType!(IStatus), validationStatusProviders) ComputedValue {
                 IObservableCollection validationStatusProviders_;
-                this(Realm r, TypeInfo c, IObservableCollection v){
+                this(Realm r, Class c, IObservableCollection v){
                     super(r, c);
                     validationStatusProviders_=v;
                 }
@@ -124,9 +124,9 @@ public final class AggregateValidationStatus : IObservableValue {
                 }
             };
         } else {
-            implementation = new class(realm, typeid(IStatus), validationStatusProviders) ComputedValue {
+            implementation = new class(realm, Class.fromType!(IStatus), validationStatusProviders) ComputedValue {
                 IObservableCollection validationStatusProviders_;
-                this(Realm r, TypeInfo c, IObservableCollection v){
+                this(Realm r, Class c, IObservableCollection v){
                     super(r, c);
                     validationStatusProviders_=v;
                 }

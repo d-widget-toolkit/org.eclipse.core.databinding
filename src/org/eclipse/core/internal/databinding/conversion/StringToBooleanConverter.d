@@ -33,7 +33,7 @@ public class StringToBooleanConverter : StringToBooleanPrimitiveConverter {
     }
 
     public Object getToType() {
-        return typeid(Boolean);
+        return Class.fromType!(Boolean);
     }
 
 }

@@ -168,9 +168,9 @@ dependencyListener = new DependencyListener();
         this.realm = realm;
 
         validationStatus = new WritableValue(realm, cast(Object)ValidationStatus.ok(),
-                typeid(IStatus));
+                Class.fromType!(IStatus));
 
-        targets = new WritableList(realm, new ArrayList(), typeid(IObservable));
+        targets = new WritableList(realm, new ArrayList(), Class.fromType!(IObservable));
         targets.addListChangeListener(targetsListener);
         unmodifiableTargets = Observables.unmodifiableObservableList(targets);
 

@@ -25,7 +25,7 @@ public class CharacterToStringConverter : Converter {
      * @param primitive
      */
     private this(bool primitive) {
-        super(primitive ? Character.TYPE : typeid(Character), typeid(StringCls));
+        super(primitive ? Character.TYPE : Class.fromType!(Character), Class.fromType!(StringCls));
         this.primitive = primitive;
     }
 

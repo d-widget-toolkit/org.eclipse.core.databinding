@@ -33,10 +33,10 @@ public class DateToStringConverter : DateConversionSupport , IConverter {
     }
 
     public Object getFromType() {
-        return typeid(Date);
+        return Class.fromType!(Date);
     }
 
     public Object getToType() {
-        return typeid(StringCls);
+        return Class.fromType!(StringCls);
     }   
 }

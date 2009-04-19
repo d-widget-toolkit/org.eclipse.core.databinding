@@ -278,7 +278,7 @@ public class Observables {
      * @return an observable set backed by the given set
      */
     public static IObservableSet staticObservableSet(Set set) {
-        return staticObservableSet(Realm.getDefault(), set, typeid(Object));
+        return staticObservableSet(Realm.getDefault(), set, Class.fromType!(Object));
     }
 
     /**
@@ -307,7 +307,7 @@ public class Observables {
      * @return an observable set backed by the given unchanging set
      */
     public static IObservableSet staticObservableSet(Realm realm, Set set) {
-        return staticObservableSet(realm, set, typeid(Object));
+        return staticObservableSet(realm, set, Class.fromType!(Object));
     }
 
     /**
@@ -373,7 +373,7 @@ public class Observables {
      * @return an observable list backed by the given unchanging list
      */
     public static IObservableList staticObservableList(List list) {
-        return staticObservableList(Realm.getDefault(), list, typeid(Object));
+        return staticObservableList(Realm.getDefault(), list, Class.fromType!(Object));
     }
 
     /**
@@ -403,7 +403,7 @@ public class Observables {
      * @return an observable list backed by the given unchanging list
      */
     public static IObservableList staticObservableList(Realm realm, List list) {
-        return staticObservableList(realm, list, typeid(Object));
+        return staticObservableList(realm, list, Class.fromType!(Object));
     }
 
     /**

@@ -13,7 +13,6 @@ module org.eclipse.core.internal.databinding.validation.AbstractStringToNumberVa
 import org.eclipse.core.internal.databinding.validation.NumberFormatConverter;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -49,9 +48,9 @@ public abstract class AbstractStringToNumberValidator : IValidator {
         this.min = min;
         this.max = max;
 
-        if (null !is cast(TypeInfo)converter.getToType()) {
-            TypeInfo clazz = cast(TypeInfo) converter.getToType();
-            toPrimitive = isJavaPrimitive(clazz);
+        if (null !is cast(Class)converter.getToType()) {
+            Class clazz = cast(Class) converter.getToType();
+            toPrimitive = clazz.isPrimitive();
         } else {
             toPrimitive = false;
         }

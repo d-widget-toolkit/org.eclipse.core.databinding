@@ -13,7 +13,6 @@
 module org.eclipse.core.internal.databinding.validation.ObjectToPrimitiveValidator;
 
 import java.lang.all;
-import java.nonstandard.RuntimeTraits;
 
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -27,26 +26,26 @@ import org.eclipse.core.runtime.Status;
  */
 public class ObjectToPrimitiveValidator : IValidator {
 
-    private TypeInfo toType;
+    private Class toType;
 
-    private static TypeInfo[][] primitiveMap;
+    private static Class[][] primitiveMap;
     static this(){
         primitiveMap = [
-            [ Integer.TYPE, typeid(Integer) ], [ Short.TYPE, typeid(Short) ],
-            [ Long.TYPE, typeid(Long) ], [ Double.TYPE, typeid(Double) ],
-            [ Byte.TYPE, typeid(Byte) ], [ Float.TYPE, typeid(Float) ],
-            [ Boolean.TYPE, typeid(Boolean) ],
-            [ Character.TYPE, typeid(Character) ] ];
+            [ Integer.TYPE, Class.fromType!(Integer) ], [ Short.TYPE, Class.fromType!(Short) ],
+            [ Long.TYPE, Class.fromType!(Long) ], [ Double.TYPE, Class.fromType!(Double) ],
+            [ Byte.TYPE, Class.fromType!(Byte) ], [ Float.TYPE, Class.fromType!(Float) ],
+            [ Boolean.TYPE, Class.fromType!(Boolean) ],
+            [ Character.TYPE, Class.fromType!(Character) ] ];
     }
 
     /**
      * @param toType
      */
-    public this(TypeInfo toType) {
+    public this(Class toType) {
         this.toType = toType;
     }
 
-    protected TypeInfo getToType() {
+    protected Class getToType() {
         return this.toType;
     }
 
@@ -56,7 +55,7 @@ public class ObjectToPrimitiveValidator : IValidator {
 
     private IStatus doValidate(Object value) {
         if (value !is null) {
-            if (!mapContainsValues(toType, getTypeInfo(value.classinfo))) {
+            if (!mapContainsValues(toType, Class.fromObject(value))) {
                 return ValidationStatus.error(getClassHint());
             }
             return Status.OK_STATUS;
@@ -64,7 +63,7 @@ public class ObjectToPrimitiveValidator : IValidator {
         return ValidationStatus.error(getNullHint());
     }
 
-    private bool mapContainsValues(TypeInfo toType, TypeInfo fromType) {
+    private bool mapContainsValues(Class toType, Class fromType) {
         for (int i = 0; i < primitiveMap.length; i++) {
             if ((primitiveMap[i][0] == toType )
                     && (primitiveMap[i][1] == fromType )) {

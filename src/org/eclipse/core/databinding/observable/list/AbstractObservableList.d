@@ -58,18 +58,18 @@ public abstract class AbstractObservableList : AbstractList ,
     public Object   remove(int index){
         return super.remove(index);
     }
-    public bool     remove(Object o){
-        return super.remove(o);
-    }
+    //public bool     remove(Object o){
+    //    return super.remove(o);
+    //}
     public bool     remove(String o){
         return super.remove(o);
     }
     public void     add(int index, Object element){
         return super.add(index, element);
     }
-    public bool     add(Object o){
-        return super.add(o);
-    }
+    //public bool     add(Object o){
+    //    return super.add(o);
+    //}
     public bool     add(String o){
         return super.add(o);
     }

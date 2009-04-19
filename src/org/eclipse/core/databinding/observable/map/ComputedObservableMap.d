@@ -64,6 +64,9 @@ public abstract class ComputedObservableMap : AbstractObservableMap {
     private Set fentrySet;
 
     private class EntrySet : AbstractSet {
+        public int opApply (int delegate(ref Object value) dg){
+            return super.opApply(dg);
+        }
 
         public Iterator iterator() {
             return new class() Iterator {

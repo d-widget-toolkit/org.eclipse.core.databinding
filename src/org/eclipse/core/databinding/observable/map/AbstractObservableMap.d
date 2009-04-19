@@ -21,6 +21,7 @@ import java.lang.all;
 
 import java.util.AbstractMap;
 import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.ChangeSupport;
@@ -77,6 +78,25 @@ public abstract class AbstractObservableMap : AbstractMap ,
     public override Set values(){
         return super.values();
     }
+    public int opApply (int delegate(ref Object value) dg){
+        foreach( entry; entrySet() ){
+            auto me = cast(Map.Entry)entry;
+            auto v = me.getValue();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    public int opApply (int delegate(ref Object key, ref Object value) dg){
+        foreach( entry; entrySet() ){
+            auto me = cast(Map.Entry)entry;
+            auto k = me.getKey();
+            auto v = me.getValue();
+            int res = dg( k, v );
+            if( res ) return res;
+        }
+        return 0;
+    } 
     // DWT end reimplement
     private ChangeSupport changeSupport;
 

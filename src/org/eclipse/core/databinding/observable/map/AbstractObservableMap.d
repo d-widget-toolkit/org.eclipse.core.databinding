@@ -51,6 +51,9 @@ public abstract class AbstractObservableMap : AbstractMap ,
     public override bool isEmpty(){
         return super.isEmpty();
     }
+    public override bool containsKey(String o){
+        return super.containsKey(o);
+    }
     public override bool containsKey(Object o){
         return super.containsKey(o);
     }
@@ -60,6 +63,15 @@ public abstract class AbstractObservableMap : AbstractMap ,
     public override Object get(Object o){
         return super.get(o);
     }
+    public override Object put(String key, String value){
+        return super.put(key, value);
+    }
+    public override Object put(Object key, String value){
+        return super.put(key, value);
+    }
+    public override Object put(String key, Object value){
+        return super.put(key, value);
+    }
     public override Object put(Object key, Object value){
         return super.put(key, value);
     }
@@ -68,6 +80,9 @@ public abstract class AbstractObservableMap : AbstractMap ,
     }
     public override hash_t toHash(){
         return super.toHash();
+    }
+    public override Object remove(String o){
+        return super.remove(o);
     }
     public override Object remove(Object o){
         return super.remove(o);

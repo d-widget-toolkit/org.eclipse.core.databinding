@@ -78,10 +78,18 @@ import org.eclipse.core.runtime.Status;
  */
 public abstract class Realm {
 
-    private static ThreadLocal defaultRealm;
-    static this(){
-        defaultRealm = new ThreadLocal();
+    private static ThreadLocal defaultRealm_;
+    private static ThreadLocal defaultRealm(){
+        if( defaultRealm_ is null ){
+            synchronized{
+                if( defaultRealm_ is null ){
+                    defaultRealm_ = new ThreadLocal();
+                }
+            }
+        }
+        return defaultRealm_;
     }
+
     this(){
         workQueue = new Queue();
     }
